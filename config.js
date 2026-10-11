@@ -19,6 +19,16 @@ window.SPAWN_SPEED = 1.0;       // Tốc độ gọi đợt quái mới (1.0 = c
 window.MOB_HP_MULT = 1.0;       // Hệ số Máu của quái (1.0 = chuẩn)
 window.MOB_DMG_MULT = 1.0;      // Hệ số Sát thương của quái (1.0 = chuẩn)
 
+// --- Các loại nhiệm vụ Dã Tẩu (Trọng số > 0 là Bật, = 0 là Tắt) ---
+window.DT_TYPES = {
+  killm: 50, // Săn quái thường tại bản đồ (Mặc định: Bật - 50)
+  elite: 25, // Diệt quái Tinh Anh tại bản đồ (Mặc định: Bật - 25)
+  boss: 15,  // Hạ Trùm bản đồ (Từ cấp 30+, thưởng x1.5) (Mặc định: Bật - 15)
+  gold: 10,  // Nộp Ngân lượng (Mặc định: Bật - 10)
+  item: 0,   // Tìm Trang bị theo thuộc tính yêu cầu (Thưởng x1.5) (Đặt > 0 để Bật, VD: 20)
+  mat: 0     // Thu thập Huyền Tinh Khoáng Thạch (Đặt > 0 để Bật, VD: 15)
+};
+
 // --- Kết nối Supabase Backend ---
 window.CHAT_CFG = {
   url: "https://bjqyirxhwpnjxqltvvur.supabase.co",
@@ -41,6 +51,9 @@ window.CHAT_CFG = {
         if (+cfg.spawnSpeed > 0) window.SPAWN_SPEED = +cfg.spawnSpeed;
         if (+cfg.mobHpMult > 0) window.MOB_HP_MULT = +cfg.mobHpMult;
         if (+cfg.mobDmgMult > 0) window.MOB_DMG_MULT = +cfg.mobDmgMult;
+        if (cfg.dtTypes && typeof cfg.dtTypes === "object") {
+          window.DT_TYPES = Object.assign({}, window.DT_TYPES, cfg.dtTypes);
+        }
         if (typeof cfg.soloMode === "boolean") {
           window.SOLO_MODE = cfg.soloMode;
           window.PARTY_OFF = cfg.soloMode ? true : !!cfg.partyOff;

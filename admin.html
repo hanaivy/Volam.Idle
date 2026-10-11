@@ -438,6 +438,118 @@
         </div>
       </div>
 
+      <!-- DA TAU QUEST TYPES CARD -->
+      <div class="card">
+        <h2>
+          <span>📜 Cấu Hình Các Loại Nhiệm Vụ Dã Tẩu (Bật / Tắt & Trọng Số Xuất Hiện)</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button id="btnDtPreset4" class="btn">⚡ Mặc định Gọn (4 loại)</button>
+            <button id="btnDtPreset6" class="btn primary">📜 Đầy đủ 6 loại VLTK 1 (Bật Tìm Đồ & Huyền Tinh)</button>
+            <button id="btnDtPresetKill" class="btn">⚔️ Chỉ Săn Quái & Trùm</button>
+          </div>
+        </h2>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">
+          Tích chọn để <b>Bật</b> hoặc bỏ tích để <b>Tắt</b> từng loại nhiệm vụ Dã Tẩu. Khi bạn tắt một loại nhiệm vụ mà nhân vật đang nhận dở, game sẽ tự động đổi sang nhiệm vụ khác đang bật ngay lập tức.
+        </div>
+
+        <div class="grid-2" style="gap:12px;">
+          <div style="background:#121916;border:1px solid #2b3d35;border-radius:6px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;flex:1;">
+              <input type="checkbox" id="chkDt_killm" checked style="width:16px;height:16px;accent-color:var(--gold);">
+              <div>
+                <b style="color:var(--gold);">1. ⚔️ Săn quái thường (`killm`)</b>
+                <small style="display:block;color:var(--muted);font-size:11px;">Săn 25–40 quái chỉ định tại bản đồ luyện công</small>
+              </div>
+            </label>
+            <div style="width:90px;text-align:right;">
+              <small style="color:var(--muted);font-size:10px;">Trọng số</small>
+              <input type="number" id="numDt_killm" min="0" max="100" value="50" style="padding:5px 8px;text-align:center;">
+            </div>
+          </div>
+
+          <div style="background:#121916;border:1px solid #2b3d35;border-radius:6px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;flex:1;">
+              <input type="checkbox" id="chkDt_elite" checked style="width:16px;height:16px;accent-color:var(--gold);">
+              <div>
+                <b style="color:var(--gold);">2. 💀 Diệt quái Tinh Anh (`elite`)</b>
+                <small style="display:block;color:var(--muted);font-size:11px;">Diệt 5–8 quái Tinh Anh tại bản đồ được giao</small>
+              </div>
+            </label>
+            <div style="width:90px;text-align:right;">
+              <small style="color:var(--muted);font-size:10px;">Trọng số</small>
+              <input type="number" id="numDt_elite" min="0" max="100" value="25" style="padding:5px 8px;text-align:center;">
+            </div>
+          </div>
+
+          <div style="background:#121916;border:1px solid #2b3d35;border-radius:6px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;flex:1;">
+              <input type="checkbox" id="chkDt_boss" checked style="width:16px;height:16px;accent-color:var(--gold);">
+              <div>
+                <b style="color:var(--gold);">3. 👹 Hạ Trùm bản đồ (`boss`)</b>
+                <small style="display:block;color:var(--muted);font-size:11px;">Mở từ cấp 30+ · Thưởng <b>×1.5</b> EXP, Vàng, Phúc Duyên</small>
+              </div>
+            </label>
+            <div style="width:90px;text-align:right;">
+              <small style="color:var(--muted);font-size:10px;">Trọng số</small>
+              <input type="number" id="numDt_boss" min="0" max="100" value="15" style="padding:5px 8px;text-align:center;">
+            </div>
+          </div>
+
+          <div style="background:#121916;border:1px solid #2b3d35;border-radius:6px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;flex:1;">
+              <input type="checkbox" id="chkDt_gold" checked style="width:16px;height:16px;accent-color:var(--gold);">
+              <div>
+                <b style="color:var(--gold);">4. 💰 Nộp Ngân lượng (`gold`)</b>
+                <small style="display:block;color:var(--muted);font-size:11px;">Nộp ngân lượng theo cấp để hoàn thành tức thì</small>
+              </div>
+            </label>
+            <div style="width:90px;text-align:right;">
+              <small style="color:var(--muted);font-size:10px;">Trọng số</small>
+              <input type="number" id="numDt_gold" min="0" max="100" value="10" style="padding:5px 8px;text-align:center;">
+            </div>
+          </div>
+
+          <div style="background:#121916;border:1px solid #3d5235;border-radius:6px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;flex:1;">
+              <input type="checkbox" id="chkDt_item" style="width:16px;height:16px;accent-color:var(--gold);">
+              <div>
+                <b style="color:#7fffd4;">5. 📜 Tìm Trang bị theo thuộc tính (`item`)</b>
+                <small style="display:block;color:var(--muted);font-size:11px;">Thưởng <b>×1.5</b> · Tự hỗ trợ 15% rơi đúng món hoặc mua sau 80 quái</small>
+              </div>
+            </label>
+            <div style="width:90px;text-align:right;">
+              <small style="color:var(--muted);font-size:10px;">Trọng số</small>
+              <input type="number" id="numDt_item" min="0" max="100" value="0" style="padding:5px 8px;text-align:center;">
+            </div>
+          </div>
+
+          <div style="background:#121916;border:1px solid #3d5235;border-radius:6px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;flex:1;">
+              <input type="checkbox" id="chkDt_mat" style="width:16px;height:16px;accent-color:var(--gold);">
+              <div>
+                <b style="color:#7fffd4;">6. 💎 Thu thập Huyền Tinh (`mat`)</b>
+                <small style="display:block;color:var(--muted);font-size:11px;">Nộp 2–4 viên Huyền Tinh Khoáng Thạch theo cấp</small>
+              </div>
+            </label>
+            <div style="width:90px;text-align:right;">
+              <small style="color:var(--muted);font-size:10px;">Trọng số</small>
+              <input type="number" id="numDt_mat" min="0" max="100" value="0" style="padding:5px 8px;text-align:center;">
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <div style="font-size:12px;">
+            Nhiệm vụ Dã Tẩu đang nhận: <b id="lblCurDtTask" style="color:#7fffd4;">(Mở tab Game để xem trực tiếp)</b>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="btnAdminDtReroll" class="btn">🎲 Đổi nhiệm vụ Dã Tẩu khác ngay</button>
+            <button id="btnAdminDtComplete" class="btn">✅ Hoàn thành ngay NV hiện tại</button>
+            <button id="btnSaveDtTypes" class="btn primary">💾 Lưu Cấu Hình Dã Tẩu</button>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <h2>
           <span>📄 Xuất Cấu Hình Cố Định (`config.js` / `ver.json`)</span>
@@ -631,7 +743,7 @@
 
   <div id="toast">Đã lưu cấu hình!</div>
 
-  <script src="config.js?v=581"></script>
+  <script src="config.js?v=585"></script>
   <script src="js/lib/supabase.js"></script>
   <script>
   (function () {
@@ -713,6 +825,12 @@
           badge.textContent = "● Đã kết nối Trực Tiếp với Tab Game đang mở (" + (msg.data.player.name || "Tân thủ") + ")";
           if (msg.note) showToast(msg.note);
           populatePlayerForm(msg.data.player);
+          var dtEl = document.getElementById("lblCurDtTask");
+          if (dtEl && msg.data.dtInfo) {
+            dtEl.textContent = msg.data.dtInfo.task
+              ? msg.data.dtInfo.task + " (Chuỗi " + msg.data.dtInfo.chain + " · Hôm nay " + msg.data.dtInfo.today + "/" + msg.data.dtInfo.maxToday + ")"
+              : "Chưa nhận / Hết lượt hôm nay";
+          }
         }
       };
       bc.postMessage({ type: "ping" });
@@ -762,6 +880,33 @@
       updateConfigPreview();
     }
 
+    var DT_KEYS = ["killm", "elite", "boss", "gold", "item", "mat"];
+    var DT_DEF_W = { killm: 50, elite: 25, boss: 15, gold: 10, item: 20, mat: 15 };
+
+    function getDtTypesFromForm() {
+      var res = {};
+      for (var i = 0; i < DT_KEYS.length; i++) {
+        var k = DT_KEYS[i];
+        var chk = document.getElementById("chkDt_" + k);
+        var num = document.getElementById("numDt_" + k);
+        var w = Math.max(0, Math.floor(+num.value || 0));
+        res[k] = chk && chk.checked ? (w > 0 ? w : DT_DEF_W[k]) : 0;
+      }
+      return res;
+    }
+
+    function setDtTypesIntoForm(dt) {
+      dt = Object.assign({ killm: 50, elite: 25, boss: 15, gold: 10, item: 0, mat: 0 }, dt || {});
+      for (var i = 0; i < DT_KEYS.length; i++) {
+        var k = DT_KEYS[i];
+        var w = Math.max(0, Math.floor(+dt[k] || 0));
+        var chk = document.getElementById("chkDt_" + k);
+        var num = document.getElementById("numDt_" + k);
+        if (chk) chk.checked = w > 0;
+        if (num) num.value = w;
+      }
+    }
+
     function getRatesFromForm() {
       return {
         soloMode: !!document.getElementById("chkSoloMode").checked,
@@ -773,7 +918,8 @@
         noviceExpBonus: Math.max(0, +document.getElementById("numNoviceBonus").value || 0),
         spawnSpeed: Math.max(0.5, +document.getElementById("numSpawnSpeed").value || 1),
         mobHpMult: Math.max(0.1, +document.getElementById("numMobHp").value || 1),
-        mobDmgMult: Math.max(0.1, +document.getElementById("numMobDmg").value || 1)
+        mobDmgMult: Math.max(0.1, +document.getElementById("numMobDmg").value || 1),
+        dtTypes: getDtTypesFromForm()
       };
     }
 
@@ -787,11 +933,18 @@
         noviceExpBonus: window.NOVICE_EXP_BONUS != null ? window.NOVICE_EXP_BONUS : 2,
         spawnSpeed: window.SPAWN_SPEED || 1,
         mobHpMult: window.MOB_HP_MULT || 1,
-        mobDmgMult: window.MOB_DMG_MULT || 1
+        mobDmgMult: window.MOB_DMG_MULT || 1,
+        dtTypes: Object.assign({ killm: 50, elite: 25, boss: 15, gold: 10, item: 0, mat: 0 }, window.DT_TYPES || {})
       };
       try {
         var raw = localStorage.getItem("jx_admin_cfg");
-        if (raw) Object.assign(cfg, JSON.parse(raw));
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          Object.assign(cfg, parsed);
+          if (parsed && parsed.dtTypes) {
+            cfg.dtTypes = Object.assign({ killm: 50, elite: 25, boss: 15, gold: 10, item: 0, mat: 0 }, parsed.dtTypes);
+          }
+        }
       } catch (e) {}
 
       document.getElementById("chkSoloMode").checked = cfg.soloMode !== false;
@@ -804,6 +957,7 @@
       document.getElementById("numSpawnSpeed").value = cfg.spawnSpeed;
       document.getElementById("numMobHp").value = cfg.mobHpMult;
       document.getElementById("numMobDmg").value = cfg.mobDmgMult;
+      setDtTypesIntoForm(cfg.dtTypes);
       updateCalculator();
     }
 
@@ -821,12 +975,68 @@
         "window.NOVICE_EXP_BONUS = " + r.noviceExpBonus + ";  // Thưởng thêm EXP Tân Thủ\n" +
         "window.SPAWN_SPEED = " + r.spawnSpeed + ";       // Tốc độ gọi đợt quái mới\n" +
         "window.MOB_HP_MULT = " + r.mobHpMult + ";       // Hệ số Máu quái\n" +
-        "window.MOB_DMG_MULT = " + r.mobDmgMult + ";      // Hệ số Sát thương quái";
+        "window.MOB_DMG_MULT = " + r.mobDmgMult + ";      // Hệ số Sát thương quái\n" +
+        "window.DT_TYPES = " + JSON.stringify(r.dtTypes) + "; // Trọng số các loại NV Dã Tẩu (>0 là Bật, 0 là Tắt)";
       document.getElementById("configPreview").textContent = code;
     }
 
-    // Bind rate inputs
+    // Bind rate inputs & Dã Tẩu inputs
     document.getElementById("chkSoloMode").onchange = updateCalculator;
+    DT_KEYS.forEach(function (k) {
+      var chk = document.getElementById("chkDt_" + k);
+      var num = document.getElementById("numDt_" + k);
+      if (chk) {
+        chk.onchange = function () {
+          if (this.checked && (+num.value || 0) <= 0) num.value = DT_DEF_W[k];
+          if (!this.checked) num.value = 0;
+          updateConfigPreview();
+        };
+      }
+      if (num) {
+        num.oninput = function () {
+          var v = Math.max(0, Math.floor(+this.value || 0));
+          if (chk) chk.checked = v > 0;
+          updateConfigPreview();
+        };
+      }
+    });
+
+    document.getElementById("btnDtPreset4").onclick = function () {
+      setDtTypesIntoForm({ killm: 50, elite: 25, boss: 15, gold: 10, item: 0, mat: 0 });
+      updateConfigPreview();
+    };
+    document.getElementById("btnDtPreset6").onclick = function () {
+      setDtTypesIntoForm({ killm: 40, elite: 20, boss: 15, gold: 10, item: 20, mat: 15 });
+      updateConfigPreview();
+    };
+    document.getElementById("btnDtPresetKill").onclick = function () {
+      setDtTypesIntoForm({ killm: 60, elite: 25, boss: 15, gold: 0, item: 0, mat: 0 });
+      updateConfigPreview();
+    };
+
+    document.getElementById("btnSaveDtTypes").onclick = function () {
+      var r = getRatesFromForm();
+      localStorage.setItem("jx_admin_cfg", JSON.stringify(r));
+      if (bc) bc.postMessage({ type: "setRates", rates: r });
+      showToast("✅ Đã lưu & áp dụng cấu hình các loại nhiệm vụ Dã Tẩu!");
+    };
+
+    document.getElementById("btnAdminDtReroll").onclick = function () {
+      if (liveConnected && bc) {
+        bc.postMessage({ type: "rerollDt" });
+      } else {
+        showToast("⚠ Hãy mở tab Game (index.html) song song để đổi nhiệm vụ Dã Tẩu trực tiếp!");
+      }
+    };
+
+    document.getElementById("btnAdminDtComplete").onclick = function () {
+      if (liveConnected && bc) {
+        bc.postMessage({ type: "completeDt" });
+      } else {
+        showToast("⚠ Hãy mở tab Game (index.html) song song để hoàn thành nhiệm vụ Dã Tẩu!");
+      }
+    };
+
     document.getElementById("rngExpRate").oninput = function () {
       document.getElementById("numExpRate").value = this.value;
       updateCalculator();
@@ -871,6 +1081,7 @@
       document.getElementById("numSpawnSpeed").value = 1;
       document.getElementById("numMobHp").value = 1;
       document.getElementById("numMobDmg").value = 1;
+      setDtTypesIntoForm({ killm: 50, elite: 25, boss: 15, gold: 10, item: 0, mat: 0 });
       updateCalculator();
       var r = getRatesFromForm();
       localStorage.setItem("jx_admin_cfg", JSON.stringify(r));

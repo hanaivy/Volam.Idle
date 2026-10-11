@@ -608,6 +608,7 @@
     return {
       slot: window.JXAdmin.getSlot ? window.JXAdmin.getSlot() : 0,
       rates: rates,
+      dtInfo: window.JXAdmin.getDtInfo ? window.JXAdmin.getDtInfo() : null,
       player: {
         name: st.name || "Tân thủ",
         fac: st.fac || null,
@@ -660,7 +661,25 @@
           "</b>"
       );
       window.JXAdmin.toast("Đã áp dụng cấu hình Admin!");
-      broadcastSnapshot("Đã cập nhật tỷ lệ máy chủ");
+      broadcastSnapshot("Đã cập nhật cấu hình máy chủ & Dã Tẩu");
+      return;
+    }
+    if (msg.type === "rerollDt") {
+      if (window.JXAdmin.rerollDtTask) {
+        var rRes = window.JXAdmin.rerollDtTask();
+        window.JXAdmin.toast(rRes.msg);
+        if (rRes.ok) window.JXAdmin.log('<b style="color:#ffd24a">📜 [Admin] ' + rRes.msg + "</b>");
+        broadcastSnapshot(rRes.msg);
+      }
+      return;
+    }
+    if (msg.type === "completeDt") {
+      if (window.JXAdmin.completeDtTask) {
+        var cRes = window.JXAdmin.completeDtTask();
+        window.JXAdmin.toast(cRes.msg);
+        if (cRes.ok) window.JXAdmin.log('<b style="color:#7fffd4">📜 [Admin] ' + cRes.msg + "</b>");
+        broadcastSnapshot(cRes.msg);
+      }
       return;
     }
     if (msg.type === "setPlayer" && msg.patch) {
@@ -840,6 +859,8 @@
     var snap = getSnapshot();
     var r = snap.rates;
     var p = snap.player;
+    var dt = r.dtTypes || { killm: 50, elite: 25, boss: 15, gold: 10, item: 0, mat: 0 };
+    var dtInfo = snap.dtInfo;
 
     var overlay = document.createElement("div");
     overlay.id = "jxQuickAdminOverlay";
@@ -847,15 +868,15 @@
       "position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:99999;display:flex;align-items:center;justify-content:center;padding:12px;font-family:'IBM Plex Mono',monospace;color:#f3e5ab;";
 
     overlay.innerHTML =
-      '<div style="background:#121816;border:1px solid #c89b3c;border-radius:8px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,0.85);padding:16px;">' +
+      '<div style="background:#121816;border:1px solid #c89b3c;border-radius:8px;max-width:580px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,0.85);padding:16px;">' +
       '  <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2b3832;padding-bottom:10px;margin-bottom:12px;">' +
-      '    <div><b style="color:#ffd24a;font-size:16px;">⚙ BẢNG ĐIỀU KHIỂN ADMIN NHANH</b><div style="font-size:11px;color:#8fa399;">Chỉnh trực tiếp thông số máy chủ & nhân vật</div></div>' +
+      '    <div><b style="color:#ffd24a;font-size:16px;">⚙ BẢNG ĐIỀU KHIỂN ADMIN NHANH</b><div style="font-size:11px;color:#8fa399;">Chỉnh trực tiếp thông số máy chủ, Dã Tẩu & nhân vật</div></div>' +
       '    <div style="display:flex;gap:8px;align-items:center;">' +
       '      <a href="admin.html" target="_blank" style="background:#2b4c3f;color:#7fffd4;border:1px solid #458068;padding:5px 10px;border-radius:4px;text-decoration:none;font-size:12px;font-weight:bold;">↗ Mở Trang Admin Đầy Đủ</a>' +
       '      <button id="qaClose" style="background:#2a1f1f;color:#ff8080;border:1px solid #6b3030;border-radius:4px;padding:4px 9px;cursor:pointer;font-size:13px;">✕</button>' +
       "    </div>" +
       "  </div>" +
-      '  <div style="background:#18211e;border:1px solid #263530;border-radius:6px;padding:12px;margin-bottom:12px;">' +
+      '  <div style="background:#18211e;border:1px solid #263530;border-radius:6px;padding:12px;margin-bottom:10px;">' +
       '    <div style="color:#ffd24a;font-weight:bold;font-size:13px;margin-bottom:8px;">⚡ TỐC ĐỘ & TỶ LỆ MÁY CHỦ (ÁP DỤNG TỨC THÌ)</div>' +
       '    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;">' +
       '      <label>Hệ số EXP (1.5 = ~30p lên cấp 20)<input id="qaExp" type="number" step="0.1" min="0.1" value="' + r.expRate + '" style="width:100%;margin-top:4px;padding:6px;background:#0d1311;color:#ffd24a;border:1px solid #3a4f47;border-radius:4px;font-weight:bold;"></label>' +
@@ -863,13 +884,28 @@
       '      <label>Hệ số Rớt đồ & Nguyên liệu<input id="qaDropR" type="number" step="0.5" min="0.1" value="' + r.dropRate + '" style="width:100%;margin-top:4px;padding:6px;background:#0d1311;color:#ffd24a;border:1px solid #3a4f47;border-radius:4px;font-weight:bold;"></label>' +
       '      <label>Tốc độ ra quái (Spawn Speed)<input id="qaSpawn" type="number" step="0.1" min="0.5" max="5" value="' + r.spawnSpeed + '" style="width:100%;margin-top:4px;padding:6px;background:#0d1311;color:#ffd24a;border:1px solid #3a4f47;border-radius:4px;font-weight:bold;"></label>' +
       "    </div>" +
-      '    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">' +
+      '    <div style="margin-top:10px;padding-top:8px;border-top:1px solid #263530;">' +
+      '      <div style="color:#ffd24a;font-weight:bold;font-size:12px;margin-bottom:6px;">📜 BẬT / TẮT LOẠI NHIỆM VỤ DÃ TẨU:</div>' +
+      '      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11.5px;">' +
+      '        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="qaDtChk" data-k="killm" data-w="50" ' + (dt.killm > 0 ? "checked" : "") + '> ⚔️ Săn quái thường</label>' +
+      '        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="qaDtChk" data-k="elite" data-w="25" ' + (dt.elite > 0 ? "checked" : "") + '> 💀 Diệt Tinh Anh</label>' +
+      '        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="qaDtChk" data-k="boss" data-w="15" ' + (dt.boss > 0 ? "checked" : "") + '> 👹 Hạ Trùm (Lv30+, ×1.5)</label>' +
+      '        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="qaDtChk" data-k="gold" data-w="10" ' + (dt.gold > 0 ? "checked" : "") + '> 💰 Nộp Ngân lượng</label>' +
+      '        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="qaDtChk" data-k="item" data-w="20" ' + (dt.item > 0 ? "checked" : "") + '> 📜 Tìm Trang bị (×1.5)</label>' +
+      '        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="qaDtChk" data-k="mat" data-w="15" ' + (dt.mat > 0 ? "checked" : "") + '> 💎 Nộp Huyền Tinh</label>' +
+      "      </div>" +
+      (dtInfo && dtInfo.task
+        ? '<div style="margin-top:6px;font-size:11px;color:#8fa399;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;"><span>Đang nhận: <b style="color:#7fffd4;" id="qaDtCur">' +
+          dtInfo.task +
+          '</b></span><div style="display:flex;gap:4px;"><button id="qaDtReroll" style="background:#23332c;color:#f3e5ab;border:1px solid #3d594d;padding:3px 7px;border-radius:4px;cursor:pointer;font-size:11px;">🎲 Đổi NV</button><button id="qaDtDone" style="background:#233b28;color:#7dff7d;border:1px solid #3d6b46;padding:3px 7px;border-radius:4px;cursor:pointer;font-size:11px;">✅ Xong ngay</button></div></div>'
+        : "") +
+      "    </div>" +
+      '    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">' +
       '      <button class="qaPreset" data-exp="1" style="background:#1e2925;color:#ccc;border:1px solid #384d45;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;">EXP ×1 (Chuẩn)</button>' +
       '      <button class="qaPreset" data-exp="1.5" style="background:#2d3b22;color:#b8ff70;border:1px solid #55733d;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;">EXP ×1.5 (~30p Lv20)</button>' +
       '      <button class="qaPreset" data-exp="2" style="background:#1e2925;color:#ccc;border:1px solid #384d45;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;">EXP ×2 (~20p Lv20)</button>' +
       '      <button class="qaPreset" data-exp="5" style="background:#1e2925;color:#ccc;border:1px solid #384d45;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;">EXP ×5</button>' +
-      '      <button class="qaPreset" data-exp="10" style="background:#1e2925;color:#ccc;border:1px solid #384d45;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;">EXP ×10</button>' +
-      '      <button id="qaSaveRates" style="margin-left:auto;background:#c89b3c;color:#111;border:none;padding:5px 12px;border-radius:4px;cursor:pointer;font-weight:bold;font-size:12px;">💾 Lưu Tỷ Lệ</button>' +
+      '      <button id="qaSaveRates" style="margin-left:auto;background:#c89b3c;color:#111;border:none;padding:5px 12px;border-radius:4px;cursor:pointer;font-weight:bold;font-size:12px;">💾 Lưu Cấu Hình</button>' +
       "    </div>" +
       "  </div>" +
       '  <div style="background:#18211e;border:1px solid #263530;border-radius:6px;padding:12px;margin-bottom:12px;">' +
@@ -908,13 +944,44 @@
       };
     }
 
+    var btnReroll = overlay.querySelector("#qaDtReroll");
+    if (btnReroll) {
+      btnReroll.onclick = function () {
+        handleAdminCmd({ type: "rerollDt" });
+        var info2 = window.JXAdmin.getDtInfo && window.JXAdmin.getDtInfo();
+        var curEl = overlay.querySelector("#qaDtCur");
+        if (curEl && info2) curEl.textContent = info2.task || "Hết lượt";
+      };
+    }
+
+    var btnDone = overlay.querySelector("#qaDtDone");
+    if (btnDone) {
+      btnDone.onclick = function () {
+        handleAdminCmd({ type: "completeDt" });
+        var info2 = window.JXAdmin.getDtInfo && window.JXAdmin.getDtInfo();
+        var curEl = overlay.querySelector("#qaDtCur");
+        if (curEl && info2) curEl.textContent = info2.task || "Hết lượt";
+      };
+    }
+
     overlay.querySelector("#qaSaveRates").onclick = function () {
       var cur = window.JXAdmin.getRates();
       cur.expRate = Math.max(0.1, +overlay.querySelector("#qaExp").value || 1.5);
       cur.goldRate = Math.max(0.1, +overlay.querySelector("#qaGoldR").value || 1);
       cur.dropRate = Math.max(0.1, +overlay.querySelector("#qaDropR").value || 1);
       cur.spawnSpeed = Math.max(0.5, +overlay.querySelector("#qaSpawn").value || 1);
+      var newDt = {};
+      var dtChks = overlay.querySelectorAll(".qaDtChk");
+      for (var c = 0; c < dtChks.length; c++) {
+        var k = dtChks[c].getAttribute("data-k");
+        var w = +dtChks[c].getAttribute("data-w") || 15;
+        newDt[k] = dtChks[c].checked ? (cur.dtTypes && cur.dtTypes[k] > 0 ? cur.dtTypes[k] : w) : 0;
+      }
+      cur.dtTypes = newDt;
       handleAdminCmd({ type: "setRates", rates: cur });
+      var info2 = window.JXAdmin.getDtInfo && window.JXAdmin.getDtInfo();
+      var curEl = overlay.querySelector("#qaDtCur");
+      if (curEl && info2) curEl.textContent = info2.task || "Hết lượt";
     };
 
     overlay.querySelector("#qaApplyChar").onclick = function () {
