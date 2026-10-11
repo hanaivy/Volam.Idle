@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cẩm Nang Tân Thủ & Lộ Trình Độc Hành — Võ Lâm Idle</title>
+  <link rel="stylesheet" href="fonts/ibm-plex-mono.css">
+  <style>
+    :root {
+      --bg: #0c110f;
+      --panel: #131b18;
+      --card: #17211d;
+      --border: #2a3b34;
+      --gold: #ffd24a;
+      --gold-dim: #c89b3c;
+      --text: #ece5d5;
+      --muted: #8fa399;
+      --green: #7fffd4;
+      --orange: #ffae42;
+      --red: #ff7a7a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.65;
+    }
+    header {
+      background: linear-gradient(180deg, #1d2622 0%, #111815 100%);
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--gold);
+    }
+    .btn {
+      background: var(--gold-dim);
+      color: #111;
+      border: 1px solid var(--gold);
+      padding: 8px 14px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 12.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn.sec {
+      background: #1f2e28;
+      color: var(--gold);
+      border-color: #3e594d;
+    }
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 860px) {
+      .wrap { grid-template-columns: 1fr; }
+      .toc { position: static !important; }
+    }
+    .toc {
+      position: sticky;
+      top: 84px;
+      align-self: start;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .toc h3 {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 13px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+    .toc a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      transition: all 0.15s;
+    }
+    .toc a:hover {
+      background: #1d2b25;
+      color: var(--gold);
+    }
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .section h2 {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 17px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .section h3 {
+      color: var(--green);
+      font-size: 14.5px;
+      margin: 18px 0 8px;
+    }
+    .timeline {
+      border-left: 2px solid var(--gold-dim);
+      margin-left: 10px;
+      padding-left: 18px;
+    }
+    .stage-box {
+      position: relative;
+      background: #121a17;
+      border: 1px solid #263831;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .stage-box::before {
+      content: "";
+      position: absolute;
+      left: -25px;
+      top: 18px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px var(--gold);
+    }
+    .stage-title {
+      font-weight: bold;
+      color: var(--gold);
+      font-size: 14.5px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .badge {
+      background: #23332c;
+      color: var(--green);
+      border: 1px solid #39574a;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 11px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 12.5px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 9px 11px;
+      text-align: left;
+    }
+    th {
+      background: #111815;
+      color: var(--gold);
+    }
+    .tip {
+      background: #14221c;
+      border-left: 3px solid var(--green);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 12px 0;
+      font-size: 12.5px;
+    }
+    .warn {
+      background: #241a12;
+      border-left: 3px solid var(--orange);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 12px 0;
+      font-size: 12.5px;
+    }
+    ul {
+      margin: 6px 0;
+      padding-left: 20px;
+    }
+    li { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>📖 CẨM NANG TÂN THỦ & LỘ TRÌNH ĐỘC HÀNH VÕ LÂM</h1>
+      <div style="font-size:11.5px;color:var(--muted);">Hướng dẫn toàn tập dành riêng cho người chơi cá nhân (Solo 1 mình từ Cấp 1 → Trùng Sinh)</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <a href="admin.html" class="btn sec">⚙ Admin Panel</a>
+      <a href="index.html" class="btn">⚔ Quay lại Game</a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <nav class="toc">
+      <h3>Mục Lục Cẩm Nang</h3>
+      <a href="#intro">1. Định hướng Chơi Đơn (Solo)</a>
+      <a href="#roadmap">2. Lộ trình Cấp 1 → 200</a>
+      <a href="#factions">3. Chọn Môn Phái Solo mạnh</a>
+      <a href="#goldboss">4. Chế độ Săn Boss Hoàng Kim</a>
+      <a href="#activities">5. Tổng hợp Hoạt Động Solo</a>
+      <a href="#forge">6. Chế Đồ Tím & Nâng Cấp</a>
+      <a href="#wuxing">7. Ngũ Hành & Kích Dòng Ẩn</a>
+      <a href="#rebirth">8. Trùng Sinh & Endgame</a>
+    </nav>
+
+    <main>
+      <!-- 1. INTRO -->
+      <section id="intro" class="section">
+        <h2>1. Định Hướng Dành Riêng Cho Người Chơi Đơn (Solo Mode)</h2>
+        <p>
+          Bản <b>Võ Lâm Idle (Solo Edition)</b> đã được tinh chỉnh toàn diện để bạn trải nghiệm trọn vẹn cảm giác cày cấp, săn Boss Hoàng Kim, ép đồ Tím và sưu tầm trang bị Hoàng Kim Môn Phái mà <b>không phụ thuộc vào Chợ hay Tổ đội</b>:
+        </p>
+        <ul>
+          <li><b>Tốc độ lên cấp cân bằng (`EXP ×1.5`)</b>: Từ Cấp 1 lên Cấp 10 (vào phái) mất khoảng <b>~7–8 phút</b>; từ Cấp 1 lên Cấp 20 mở khóa đầy đủ Dã Tẩu & Sát Thủ mất đúng <b>~30 phút</b>.</li>
+          <li><b>Tự cung tự cấp Kim Nguyên Bảo (KNB)</b>: Khi chơi 1 mình, KNB rớt trực tiếp từ <b>Săn Boss Hoàng Kim</b> (`+5 → +35 KNB/con`), <b>Mốc Dã Tẩu</b>, <b>Điểm danh</b>, <b>Tháp Cửu Trọng</b> và đổi bằng Ngân lượng trong <b>Kỳ Trân Các</b>.</li>
+          <li><b>Đấu Trường Săn Boss Hoàng Kim chủ động (Nút `🐉 Săn Boss` trên thanh công cụ)</b>: Bạn không cần chờ ngẫu nhiên mà có thể chủ động triệu hồi 3 bậc Boss Hoàng Kim (Thường, Đại Boss Môn Phái, Tuyệt Thế Hoàng Kim) ngay tại bãi luyện công để săn đồ Hoàng Kim đúng phái!</li>
+        </ul>
+        <div class="tip">
+          💡 <b>Mẹo cài đặt đầu game:</b> Vào thẻ <b>Hệ thống</b> (hoặc nút <b>Trợ Thủ</b>), bật hết: <i>Tự mặc đồ tốt hơn</i>, <i>Tự bán đồ thừa</i>, <i>Tự mua thuốc</i>, và <i>Dã Tẩu tự trả/nhận</i> để nhân vật tự động cày mượt mà 24/7.
+        </div>
+      </section>
+
+      <!-- 2. ROADMAP -->
+      <section id="roadmap" class="section">
+        <h2>2. Lộ Trình Phát Triển Nhân Vật (Cấp 1 → 200)</h2>
+        <div class="timeline">
+          <div class="stage-box">
+            <div class="stage-title">
+              <span>Giai đoạn 1: Sơ Nhập Giang Hồ (Cấp 1 → 10)</span>
+              <span class="badge">⏱ 0 – 8 phút đầu</span>
+            </div>
+            <ul>
+              <li>Khi mới tạo nhân vật ở <b>Ba Lăng Huyện</b>, nhân vật tự động đánh Nhím, Heo Rừng, Sơn Tặc để lên cấp.</li>
+              <li>Mở bảng <b>Võ Công</b> học ngay <b>Khinh Công</b> để di chuyển tiếp cận quái nhanh hơn.</li>
+              <li>Nhặt trang bị Trắng/Xanh đầu tiên, hệ thống sẽ tự mặc món mạnh hơn.</li>
+            </ul>
+          </div>
+
+          <div class="stage-box">
+            <div class="stage-title">
+              <span>Giai đoạn 2: Gia Nhập Môn Phái & Hào Quang Tân Thủ (Cấp 10 → 30)</span>
+              <span class="badge">⏱ Phút thứ 8 – Phút 45</span>
+            </div>
+            <ul>
+              <li>Đạt <b>Cấp 10</b>: Bấm thông báo <b>⚑ Gia nhập môn phái</b> để chọn 1 trong Thập Đại Phái.</li>
+              <li>Ngay khi vào phái, bạn nhận <b>Hào Quang Tân Thủ (`x3 EXP` từ cấp 10 đến 29)</b> giúp tốc độ luyện cấp tăng vọt.</li>
+              <li>Vào <b>Võ Công</b> học chiêu đánh cấp 10 và trấn phái sơ cấp, gắn vào ô <b>F1–F4</b>.</li>
+              <li>Đạt <b>Cấp 20 (khoảng phút thứ 30)</b>: Mở khóa 2 hoạt động quan trọng nhất đầu game:
+                <ul>
+                  <li><b>📜 Nhiệm vụ Dã Tẩu (80 câu/ngày)</b>: Nguồn EXP, Ngân lượng, Phúc Duyên, Huyền Tinh và Bí Kíp 90 cực lớn.</li>
+                  <li><b>🗡 Boss Sát Thủ (Nhiếp Thí Trần)</b>: Hạ sát thủ cùng cấp để nhặt trang bị 5–6 dòng, Huyền Tinh và Lệnh Bài.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <div class="stage-box">
+            <div class="stage-title">
+              <span>Giai đoạn 3: Mở Khóa Phó Bản & Rèn Đồ Tím (Cấp 30 → 79)</span>
+              <span class="badge">🌱 Giữa Game (Mid-game)</span>
+            </div>
+            <ul>
+              <li><b>Cấp 30</b>: Mở phó bản <b>Vượt Ải (Thời Gian Thử Thách)</b> và <b>Tháp Cửu Trọng Thiên</b> (leo tầng nhận KNB, Danh hiệu & Huyền Tinh).</li>
+              <li><b>Cấp 40</b>: Mở <b>Chiến Trường Tống Kim</b> (đánh solo tích điểm đổi thưởng) & nhận <b>Đồng Hành (Pet)</b> trợ chiến.</li>
+              <li><b>Cấp 50</b>: Mở <b>Bến Thuyền Phong Lăng Độ</b> (săn Thủy Tặc Đầu Lĩnh rớt đồ hiếm, Rương Ngựa, Bí Kíp).</li>
+              <li><b>Lò Rèn</b>: Bắt đầu dùng <i>Huyền Tinh</i> để <b>Rút thuộc tính</b> từ đồ xanh dòng cao (hút máu, hút nội lực, tốc đánh, kháng tất cả) và <b>Khảm vào Phôi Đồ Tím</b>.</li>
+            </ul>
+          </div>
+
+          <div class="stage-box">
+            <div class="stage-title">
+              <span>Giai đoạn 4: Võ Công 90 & Săn Đồ Hoàng Kim Môn Phái (Cấp 80 → 150)</span>
+              <span class="badge">🔥 Cao Thủ (Late-game)</span>
+            </div>
+            <ul>
+              <li><b>Đạt Cấp 80</b>: Bước ngoặt sức mạnh lớn nhất!
+                <ul>
+                  <li>Dùng <b>📕 Bí Kíp 90</b> để lĩnh ngộ tuyệt kỹ trấn phái 90, sau đó dùng <b>📘 Đại Thành Bí Kíp</b> (mua trong Kỳ Trân Các hoặc rơi từ Boss) để đưa kỹ năng 90 lên thẳng <b>Cấp 20 tối đa</b>!</li>
+                  <li>Ăn đủ <b>15 cuốn Võ Lâm Mật Tịch</b> (`+15 điểm kỹ năng`) và <b>15 cuốn Tẩy Tủy Kinh</b> (`+75 điểm tiềm năng`).</li>
+                </ul>
+              </li>
+              <li><b>Săn Boss Hoàng Kim (`🐉 Săn Boss`)</b>: Chủ động triệu hồi <b>Đại Boss Hoàng Kim</b> & <b>Tuyệt Thế Hoàng Kim</b> để thu thập trọn bộ <b>Hoàng Kim Môn Phái (HKMP)</b> cùng bộ trang sức <b>An Bang / Định Quốc</b>.</li>
+            </ul>
+          </div>
+
+          <div class="stage-box">
+            <div class="stage-title">
+              <span>Giai đoạn 5: Trùng Sinh & Trang Bị Bạch Kim (Cấp 160 → 200)</span>
+              <span class="badge">👑 Độc Cô Cầu Bại (Endgame)</span>
+            </div>
+            <ul>
+              <li>Đạt cấp tối đa (160–200 tùy mốc), tiến hành <b>Chuyển Sinh / Trùng Sinh (Tối đa 10 lần)</b>.</li>
+              <li>Mỗi lần Trùng Sinh giúp nhân vật giữ lại nền tảng, mở thêm giới hạn ăn <b>Võ Lâm Mật Tịch (+5 cuốn/lần)</b>, <b>Tẩy Tủy Kinh (+15 cuốn/lần)</b>, tăng <b>+10% tỷ lệ rớt đồ</b> và đủ điều kiện cưỡi các Thần Mã chí tôn (<b>Bôn Tiêu, Phiên Vũ, Siêu Quang</b>).</li>
+              <li>Tại <b>Lò Rèn</b>: Nâng cấp trang bị Hoàng Kim lên <b>[Bạch Kim] (+1 → +10)</b> với sức mạnh vượt trội.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. FACTIONS -->
+      <section id="factions" class="section">
+        <h2>3. Gợi Ý Chọn Môn Phái Khi Chơi 1 Mình (Solo)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Ngũ Hành</th>
+              <th>Môn Phái</th>
+              <th>Đặc Điểm Khi Chơi Solo</th>
+              <th>Độ Dễ Đầu Game</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b style="color:#ffd24a;">Hệ Kim</b></td>
+              <td><b>Thiếu Lâm</b> / <b>Thiên Vương</b></td>
+              <td>Máu dày, kháng cao, phản đòn (Thiếu Lâm) hoặc áp sát chém đơn mục tiêu cực rát (Thiên Vương). Cực kỳ trâu khi solo Boss Hoàng Kim.</td>
+              <td>⭐⭐⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td><b style="color:#7be07b;">Hệ Mộc</b></td>
+              <td><b>Đường Môn</b> / <b>Ngũ Độc</b></td>
+              <td>Sát thương độc rút máu theo thời gian + tầm xa. Rất mạnh khi đánh Boss máu trâu vượt cấp (cấu rỉa an toàn).</td>
+              <td>⭐⭐⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td><b style="color:#66ccff;">Hệ Thủy</b></td>
+              <td><b>Nga My</b> / <b>Thúy Yên</b></td>
+              <td>Đòn đánh kèm làm chậm (băng sát), diện rộng (AoE) dọn quái cực nhanh, Nga My có hỗ trợ hồi phục tốt.</td>
+              <td>⭐⭐⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td><b style="color:#ff704d;">Hệ Hỏa</b></td>
+              <td><b>Cái Bang</b> / <b>Thiên Nhẫn</b></td>
+              <td>Sát thương bạo phát diện rộng (Rồng Cái Bang / Thiên Ngoại Lưu Tinh). Khi có kỹ năng 90 + đồ HKMP thì tốc độ dọn bãi số 1.</td>
+              <td>⭐⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td><b style="color:#d9a66c;">Hệ Thổ</b></td>
+              <td><b>Võ Đang</b> / <b>Côn Lôn</b></td>
+              <td>Làm choáng (Stun) diện rộng + tốc độ chạy/đánh cao, lấy nội lực đỡ sát thương (Võ Đang). Cuối game cực kỳ toàn diện.</td>
+              <td>⭐⭐⭐⭐</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 4. GOLD BOSS HUNT -->
+      <section id="goldboss" class="section">
+        <h2>4. Chế Độ Săn Boss Hoàng Kim (Tính Năng Trọng Tâm Chơi Đơn)</h2>
+        <p>
+          Trên thanh công cụ phía trên màn hình có nút <b><span style="color:var(--gold);">🐉 Săn Boss</span></b>. Đây là tính năng được thiết kế riêng cho người chơi đơn để chủ động khiêu chiến Boss Hoàng Kim bất cứ lúc nào khi đang ở bãi luyện công:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Cấp Bậc Boss</th>
+              <th>Độ Khó</th>
+              <th>Điều Kiện Triệu Hồi</th>
+              <th>Phần Thưởng Chắc Chắn</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b style="color:#ffd24a;">1. Trùm Hoàng Kim Dã Ngoại</b></td>
+              <td>Máu ×2 · Công ×1.15</td>
+              <td>Miễn phí mỗi 15–30 phút (hoặc dùng <b>5 Vạn Lượng</b> gọi ngay)</td>
+              <td>• 1 Trang bị Hoàng Kim ngẫu nhiên<br>• <b>+5 Kim Nguyên Bảo</b> + 15 Phúc Duyên<br>• 1–3 Thần Bí Khoáng Thạch</td>
+            </tr>
+            <tr>
+              <td><b style="color:#ff9f43;">2. Đại Boss Hoàng Kim Môn Phái</b></td>
+              <td>Máu ×3 · Công ×1.25</td>
+              <td><b>1 Lệnh Bài Sát Thủ</b> hoặc <b>20 Phúc Duyên</b></td>
+              <td>• <b>100% 1 Đồ Hoàng Kim ĐÚNG MÔN PHÁI</b><br>• <b>+15 Kim Nguyên Bảo</b> + 25 Phúc Duyên<br>• 2 Huyền Tinh + 45% rơi <b>Bí Kíp 90</b></td>
+            </tr>
+            <tr>
+              <td><b style="color:#ff5252;">3. Tuyệt Thế Thập Đại Hoàng Kim</b></td>
+              <td>Máu ×5 · Công ×1.40</td>
+              <td><b>50 Phúc Duyên</b> hoặc <b>30 Vạn Lượng</b></td>
+              <td>• <b>2 Đồ Hoàng Kim (1 Đúng Phái + 1 An Bang/Định Quốc)</b><br>• <b>+35 Kim Nguyên Bảo</b> + 50 Phúc Duyên<br>• <b>1 Rương Ngựa</b> + 3 Huyền Tinh</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="warn">
+          ⚠ <b>Lưu ý trước khi gọi Đại Boss / Tuyệt Thế Boss:</b> Hãy đảm bảo trong túi có đủ bình máu, bật <i>Tự dùng thuốc</i> và nên đánh ở bãi luyện công ngang hoặc thấp hơn cấp nhân vật một chút để không bị Boss sốc sát thương!
+        </div>
+      </section>
+
+      <!-- 5. SOLO ACTIVITIES -->
+      <section id="activities" class="section">
+        <h2>5. Tổng Hợp Các Hoạt Động Hàng Ngày Cho Người Chơi Đơn</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Hoạt Động</th>
+              <th>Cấp Mở</th>
+              <th>Vị Trí Mở</th>
+              <th>Phần Thưởng Quan Trọng</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>📜 Nhiệm Vụ Dã Tẩu</b></td>
+              <td>Cấp 20</td>
+              <td>Thẻ <b>Nhiệm vụ › Dã Tẩu</b></td>
+              <td>80 nhiệm vụ/ngày (có thể dùng thêm <i>Lệnh Bài Dã Tẩu</i>). Mốc 50/100/200 tặng KNB, Phúc Duyên, Đồ 5 dòng và <b>Bí Kíp 90</b>.</td>
+            </tr>
+            <tr>
+              <td><b>🗡 Boss Sát Thủ</b></td>
+              <td>Cấp 20</td>
+              <td>Thẻ <b>Nhiệm vụ › Sát Thủ</b></td>
+              <td>Hạ sát thủ nhận Đồ Xanh 5 dòng, Huyền Tinh, Lệnh Bài Sát Thủ (dùng để triệu hồi Đại Boss Hoàng Kim!).</td>
+            </tr>
+            <tr>
+              <td><b>🗼 Tháp Cửu Trọng</b></td>
+              <td>Cấp 30</td>
+              <td>Nút <b>⚔ Hoạt động › Tháp</b></td>
+              <td>Leo tháp không hồi máu giữa các tầng, nhận Danh hiệu vĩnh viễn, KNB và Huyền Tinh cấp cao.</td>
+            </tr>
+            <tr>
+              <td><b>⏳ Vượt Ải & Tống Kim</b></td>
+              <td>Cấp 30 / 40</td>
+              <td>Nút <b>⚔ Hoạt động › Phó bản</b></td>
+              <td>Đánh theo đợt quái giới hạn thời gian, rớt nhiều EXP, Huyền Tinh, Mảnh trang bị Hoàng Kim.</td>
+            </tr>
+            <tr>
+              <td><b>⛵ Phong Lăng Độ</b></td>
+              <td>Cấp 50</td>
+              <td>Nút <b>⚔ Hoạt động › Đi thuyền</b></td>
+              <td>Tiêu diệt Thủy Tặc và Boss trên thuyền, tỷ lệ cao nhận Rương Ngựa, Thủy Tinh, Bí Kíp.</td>
+            </tr>
+            <tr>
+              <td><b>👹 Boss Tuần</b></td>
+              <td>Cấp 40</td>
+              <td>Nút <b>⚔ Hoạt động › Boss tuần</b></td>
+              <td>3 lượt/tuần. Đánh trong thời gian giới hạn để tích sát thương nhận Rương thưởng lớn.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 6. FORGE -->
+      <section id="forge" class="section">
+        <h2>6. Hướng Dẫn Lò Rèn: Chế Đồ Tím & Nâng Cấp Bạch Kim</h2>
+        <h3>A. Quy trình chế tạo Trang bị Tím 6 dòng hoàn hảo</h3>
+        <ol>
+          <li><b>Bước 1 — Hợp Huyền Tinh</b>: Tích trữ trang sức (Nhẫn, Dây chuyền, Ngọc bội) hoặc ghép 3 viên Huyền Tinh cấp thấp thành 1 viên cấp cao hơn.</li>
+          <li><b>Bước 2 — Rút Đá Thuộc Tính (Khoáng Thạch)</b>: Khi nhặt được món <b>Đồ Xanh</b> có dòng quý (ví dụ: <i>Hút sinh lực, Hút nội lực, Tốc độ đánh, Kháng tất cả, Kỹ năng vốn có +1</i>), đừng bán! Hãy vào <b>Lò Rèn › Rút thuộc tính</b> dùng Huyền Tinh để tách dòng đó thành viên đá Khoáng Thạch.</li>
+          <li><b>Bước 3 — Khảm Đồ Tím</b>: Tìm một món <b>Phôi Đồ Tím</b> có nhiều lỗ trống (tối đa 6 dòng), dùng Khoáng Thạch vừa rút khảm lần lượt các dòng Hiện (1, 3, 5) và Ẩn (2, 4, 6) để tạo ra món trang bị hoàn mỹ theo ý muốn.</li>
+        </ol>
+        <h3>B. Ghép Mảnh & Nâng cấp Hoàng Kim → Bạch Kim</h3>
+        <ul>
+          <li>Khi đánh phó bản / Boss rớt các <b>Mảnh Hoàng Kim</b>, đủ số mảnh có thể ghép thành trang bị Hoàng Kim hoàn chỉnh trong Lò Rèn.</li>
+          <li>Trang bị <b>Hoàng Kim Môn Phái</b> có thể dùng <i>Huyền Tinh cấp cao + Thần Bí Khoáng Thạch + Thủy Tinh</i> để cường hóa lên <b>[Bạch Kim] (+1 → +10)</b>.</li>
+        </ul>
+      </section>
+
+      <!-- 7. WUXING -->
+      <section id="wuxing" class="section">
+        <h2>7. Quy Luật Ngũ Hành & Kích Hoạt Dòng Ẩn Trang Bị</h2>
+        <p>
+          Giống hệt <b>Võ Lâm Truyền Kỳ 1</b> kinh điển, mỗi trang bị có các dòng <b>Hiện</b> (luôn có tác dụng) và các dòng <b>Ẩn</b> (màu xám, cần 2 món trang bị ở vị trí chỉ định có hệ Ngũ Hành <b>Tương Sinh</b> với nó để kích hoạt):
+        </p>
+        <div class="tip" style="text-align:center;font-size:14px;font-weight:bold;">
+          🟡 KIM sinh 🔵 THỦY &nbsp;→&nbsp; 🔵 THỦY sinh 🟢 MỘC &nbsp;→&nbsp; 🟢 MỘC sinh 🔴 HỎA &nbsp;→&nbsp; 🔴 HỎA sinh 🟤 THỔ &nbsp;→&nbsp; 🟤 THỔ sinh 🟡 KIM
+        </div>
+        <ul>
+          <li>Mẹo nhanh: Khi bấm vào một món đồ trong <b>Hành trang</b>, game sẽ ghi chú rõ <i>"Cần món ở ô [A] và [B] hệ [X] để kích dòng ẩn"</i>. Bạn cũng có thể bật <b>Tự mặc đồ tốt hơn</b> vì thuật toán tính Lực Chiến của game đã tự động tính cả các dòng ẩn được kích hoạt!</li>
+        </ul>
+      </section>
+
+      <!-- 8. REBIRTH -->
+      <section id="rebirth" class="section">
+        <h2>8. Hệ Thống Trùng Sinh (Chuyển Sinh 1 → 10)</h2>
+        <p>
+          Khi nhân vật đạt cấp độ tối đa, bạn có thể tiến hành <b>Trùng Sinh</b> tại thẻ <b>Nhân Vật</b>:
+        </p>
+        <ul>
+          <li>Nhân vật trở về Cấp 1 nhưng <b>giữ nguyên trang bị, ngựa, kho đồ, võ công 90 đã học</b>.</li>
+          <li>Tăng giới hạn sử dụng <b>Võ Lâm Mật Tịch (+5 cuốn / mỗi lần Trùng Sinh)</b> và <b>Tẩy Tủy Kinh (+15 cuốn / mỗi lần Trùng Sinh)</b>.</li>
+          <li>Mỗi cấp Trùng Sinh cộng thêm <b>+10% tỷ lệ rơi trang bị vĩnh viễn</b> và mở khóa điều kiện cưỡi các loại Danh Mã – Chí Tôn Mã (<b>Bôn Tiêu, Phiên Vũ, Xích Long Câu, Siêu Quang</b>).</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>
