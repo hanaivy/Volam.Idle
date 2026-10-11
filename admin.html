@@ -1,0 +1,1173 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Võ Lâm Idle — Admin Control Panel</title>
+  <link rel="stylesheet" href="fonts/ibm-plex-mono.css">
+  <style>
+    :root {
+      --bg: #0c110f;
+      --panel: #131b18;
+      --card: #18221e;
+      --border: #2a3b34;
+      --gold: #ffd24a;
+      --gold-dim: #c89b3c;
+      --text: #eae3d2;
+      --muted: #8fa399;
+      --accent: #38b28b;
+      --danger: #e05252;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    header {
+      background: linear-gradient(180deg, #1b2420 0%, #111815 100%);
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: bold;
+      background: #1c2b24;
+      border: 1px solid #355949;
+      color: #7fffd4;
+    }
+    .status-badge.offline {
+      background: #2b2218;
+      border-color: #6e522b;
+      color: #ffcc66;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 14px 24px 0;
+      max-width: 1240px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: var(--panel);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      padding: 10px 18px;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .tab-btn.active {
+      background: var(--card);
+      color: var(--gold);
+      border-color: var(--gold-dim);
+    }
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 20px 24px 60px;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    }
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 15px;
+      color: var(--gold);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #d6cfc2;
+    }
+    .field small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    input[type="number"], input[type="text"], select, textarea {
+      background: #0d1311;
+      color: var(--gold);
+      border: 1px solid #384f45;
+      border-radius: 5px;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 13px;
+      width: 100%;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+    .btn {
+      background: #23332c;
+      color: var(--text);
+      border: 1px solid #3d594d;
+      padding: 7px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: bold;
+      transition: all 0.15s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover {
+      background: #2e453b;
+      border-color: var(--gold-dim);
+      color: var(--gold);
+    }
+    .btn.primary {
+      background: var(--gold-dim);
+      color: #111;
+      border-color: var(--gold);
+    }
+    .btn.primary:hover {
+      background: var(--gold);
+      color: #000;
+    }
+    .btn.danger {
+      background: #3a1c1c;
+      color: #ff9999;
+      border-color: #7a3333;
+    }
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .calc-box {
+      background: #101714;
+      border: 1px solid #2d4239;
+      border-left: 3px solid var(--gold);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 12px;
+    }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .stat-pill {
+      background: #17211d;
+      border: 1px solid #283831;
+      border-radius: 5px;
+      padding: 8px 10px;
+    }
+    .stat-pill span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .stat-pill b {
+      font-size: 15px;
+      color: var(--gold);
+    }
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1b2e26;
+      color: #7fffd4;
+      border: 1px solid var(--gold-dim);
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: bold;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 9999;
+    }
+    #toast.show { opacity: 1; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+    }
+    th { color: var(--gold); background: #121916; }
+    pre {
+      background: #0b0f0e;
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      color: #9fe8c8;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <span style="font-size:24px;">⚙</span>
+      <div>
+        <h1>VÕ LÂM IDLE — ADMIN CONTROL PANEL</h1>
+        <div style="font-size:11px;color:var(--muted);">Quản trị tốc độ máy chủ, tỷ lệ rơi đồ, chỉnh sửa nhân vật & cơ sở dữ liệu Supabase</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div id="connBadge" class="status-badge offline">● Đang chỉnh qua LocalStorage (Mở tab Game để đồng bộ trực tiếp)</div>
+      <a href="index.html" class="btn primary">⚔ Vào Game</a>
+    </div>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-tab="rates">⚡ 1. Tốc độ & Tỷ lệ Máy chủ</button>
+    <button class="tab-btn" data-tab="char">🧙‍♂️ 2. Chỉnh Nhân Vật & Phát Đồ (GM)</button>
+    <button class="tab-btn" data-tab="supabase">🌐 3. Quản lý Máy chủ Online (Supabase)</button>
+  </div>
+
+  <div class="container">
+    <!-- TAB 1: SERVER RATES -->
+    <div id="tab-rates" class="tab-pane active">
+      <div class="grid-2">
+        <div class="card">
+          <h2>
+            <span>📈 Kinh Nghiệm & Lên Cấp (EXP)</span>
+            <button id="btnResetRates" class="btn">🔄 Mặc định (1.5x)</button>
+          </h2>
+
+          <div class="field">
+            <label>
+              <span>Hệ số EXP toàn máy chủ (`EXP_RATE`)</span>
+              <b id="lblExpRate" style="color:var(--gold);">1.5x</b>
+            </label>
+            <div class="input-row">
+              <input type="range" id="rngExpRate" min="0.5" max="20" step="0.1" value="1.5">
+              <input type="number" id="numExpRate" min="0.1" max="1000" step="0.1" value="1.5" style="width:100px;">
+            </div>
+            <div class="btn-group">
+              <button class="btn exp-preset" data-val="1">1.0x (Chuẩn ~43p Lv20)</button>
+              <button class="btn exp-preset primary" data-val="1.5">1.5x (Khuyên dùng ~30p Lv20)</button>
+              <button class="btn exp-preset" data-val="2">2.0x (~22p Lv20)</button>
+              <button class="btn exp-preset" data-val="3">3.0x (~15p Lv20)</button>
+              <button class="btn exp-preset" data-val="5">5.0x (~10p Lv20)</button>
+              <button class="btn exp-preset" data-val="10">10x</button>
+              <button class="btn exp-preset" data-val="50">50x</button>
+              <button class="btn exp-preset" data-val="100">100x (Test)</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              <span>Giới hạn cấp Hào Quang Tân Thủ (`NOVICE_MAX_LVL`)</span>
+              <b id="lblNoviceLvl" style="color:var(--gold);">Dưới cấp 30</b>
+            </label>
+            <div class="input-row">
+              <input type="number" id="numNoviceLvl" min="0" max="200" step="1" value="30">
+            </div>
+            <small>Nhân vật đã vào phái có cấp nhỏ hơn mốc này (chưa Trùng Sinh) sẽ được cộng thêm EXP Tân Thủ.</small>
+          </div>
+
+          <div class="field">
+            <label>
+              <span>Thưởng thêm EXP Tân Thủ (`NOVICE_EXP_BONUS`)</span>
+              <b id="lblNoviceBonus" style="color:var(--gold);">+200% (x3 EXP)</b>
+            </label>
+            <div class="input-row">
+              <input type="number" id="numNoviceBonus" min="0" max="20" step="0.5" value="2">
+            </div>
+            <small>Giá trị `2` tương ứng `+200%` (tức nhân 3 lần EXP khi dưới cấp Tân Thủ). Đặt `0` nếu muốn tắt.</small>
+          </div>
+
+          <div class="calc-box">
+            <b style="color:var(--gold);">⏱ Ước tính thời gian cày cấp thực tế (Solo từ Cấp 1):</b>
+            <div class="calc-grid">
+              <div class="stat-pill">
+                <span>Cấp 1 → Cấp 10 (Vào phái)</span>
+                <b id="estLv10">~8.5 phút</b>
+              </div>
+              <div class="stat-pill">
+                <span>Cấp 1 → Cấp 20 (Thường)</span>
+                <b id="estLv20">~30.1 phút</b>
+              </div>
+              <div class="stat-pill">
+                <span>Cấp 1 → Cấp 20 (Có Tiên Thảo Lộ)</span>
+                <b id="estLv20Ttl">~19.5 phút</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><span>💰 Rớt Đồ, Ngân Lượng & Độ Khó Quái</span></h2>
+
+          <div class="field">
+            <label>
+              <span>Hệ số Ngân lượng rơi (`GOLD_RATE`)</span>
+              <b id="lblGoldRate" style="color:var(--gold);">1.0x</b>
+            </label>
+            <div class="input-row">
+              <input type="number" id="numGoldRate" min="0.1" max="1000" step="0.5" value="1">
+            </div>
+            <div class="btn-group">
+              <button class="btn gold-preset" data-val="1">1x (Chuẩn)</button>
+              <button class="btn gold-preset" data-val="2">2x</button>
+              <button class="btn gold-preset" data-val="5">5x</button>
+              <button class="btn gold-preset" data-val="10">10x</button>
+              <button class="btn gold-preset" data-val="50">50x</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              <span>Hệ số Tỷ lệ Rớt Đồ & Nguyên Liệu (`DROP_RATE`)</span>
+              <b id="lblDropRate" style="color:var(--gold);">1.0x</b>
+            </label>
+            <div class="input-row">
+              <input type="number" id="numDropRate" min="0.1" max="100" step="0.5" value="1">
+            </div>
+            <div class="btn-group">
+              <button class="btn drop-preset" data-val="1">1x (Chuẩn)</button>
+              <button class="btn drop-preset" data-val="2">2x</button>
+              <button class="btn drop-preset" data-val="5">5x</button>
+              <button class="btn drop-preset" data-val="10">10x</button>
+              <button class="btn drop-preset" data-val="25">25x</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              <span>Tốc độ gọi đợt quái mới (`SPAWN_SPEED`)</span>
+              <b id="lblSpawnSpeed" style="color:var(--gold);">1.0x</b>
+            </label>
+            <div class="input-row">
+              <input type="number" id="numSpawnSpeed" min="0.5" max="5" step="0.25" value="1">
+            </div>
+          </div>
+
+          <div class="grid-2" style="gap:10px;">
+            <div class="field">
+              <label><span>Hệ số Máu Quái (`MOB_HP`)</span></label>
+              <input type="number" id="numMobHp" min="0.1" max="10" step="0.1" value="1">
+            </div>
+            <div class="field">
+              <label><span>Hệ số Sát Thương Quái (`MOB_DMG`)</span></label>
+              <input type="number" id="numMobDmg" min="0.1" max="10" step="0.1" value="1">
+            </div>
+          </div>
+
+          <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button id="btnSaveRates" class="btn primary" style="flex:1;justify-content:center;padding:11px;font-size:14px;">
+              💾 LƯU & ÁP DỤNG NGAY VÀO GAME
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>
+          <span>📄 Xuất Cấu Hình Cố Định (`config.js` / `ver.json`)</span>
+          <button id="btnCopyConfig" class="btn primary">📋 Copy nội dung `config.js`</button>
+        </h2>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
+          Khi bạn chỉnh trên Admin Panel, cấu hình đã tự động lưu trên trình duyệt của bạn. Nếu muốn cố định các con số này cho tất cả người chơi khác trên GitHub Pages, hãy copy đoạn dưới đây dán vào file <code>config.js</code>:
+        </div>
+        <pre id="configPreview"></pre>
+      </div>
+    </div>
+
+    <!-- TAB 2: CHARACTER & GM TOOLS -->
+    <div id="tab-char" class="tab-pane">
+      <div class="card" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+          <b style="color:var(--gold);font-size:14px;">🎯 Chọn Ô Nhân Vật (Save Slot):</b>
+          <span style="color:var(--muted);font-size:12px;margin-left:8px;">Chỉnh trực tiếp nhân vật đang online hoặc chỉnh dữ liệu trong LocalStorage</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="selSlot" style="width:220px;">
+            <option value="0">Ô nhân vật 1 (Mặc định)</option>
+            <option value="1">Ô nhân vật 2</option>
+            <option value="2">Ô nhân vật 3</option>
+            <option value="3">Ô nhân vật 4</option>
+            <option value="4">Ô nhân vật 5</option>
+            <option value="5">Ô nhân vật 6</option>
+          </select>
+          <button id="btnReloadChar" class="btn">🔄 Tải lại dữ liệu</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h2><span>🧙‍♂️ Chỉ Số Cơ Bản & Cấp Độ</span></h2>
+          <div class="grid-2" style="gap:10px;">
+            <div class="field">
+              <label>Tên nhân vật</label>
+              <input type="text" id="chName" value="Tân thủ">
+            </div>
+            <div class="field">
+              <label>Cấp độ (1 – 200)</label>
+              <input type="number" id="chLvl" min="1" max="200" value="1">
+            </div>
+            <div class="field">
+              <label>Cấp Trùng Sinh (0 – 10)</label>
+              <input type="number" id="chReborn" min="0" max="10" value="0">
+            </div>
+            <div class="field">
+              <label>Mở khóa Map tối đa (`maxStage`)</label>
+              <input type="number" id="chMaxStage" min="1" max="300" value="1">
+            </div>
+            <div class="field">
+              <label>Điểm Tiềm Năng chưa cộng</label>
+              <input type="number" id="chAttrPts" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>Điểm Kỹ Năng chưa cộng</label>
+              <input type="number" id="chSkPts" min="0" value="1">
+            </div>
+            <div class="field">
+              <label>Ngân lượng (`gold`)</label>
+              <input type="number" id="chGold" min="0" value="0">
+            </div>
+            <div class="field">
+              <label>Kim Nguyên Bảo (`knb`)</label>
+              <input type="number" id="chKnb" min="0" value="0">
+            </div>
+          </div>
+
+          <div class="btn-group" style="margin-top:10px;">
+            <button id="btnSaveChar" class="btn primary" style="padding:10px 18px;font-size:13px;">💾 Lưu Chỉ Số Nhân Vật</button>
+            <button class="btn quick-add" data-field="addGold" data-val="100000">+10 Vạn Lượng</button>
+            <button class="btn quick-add" data-field="addGold" data-val="1000000">+100 Vạn Lượng</button>
+            <button class="btn quick-add" data-field="addGold" data-val="10000000">+1,000 Vạn Lượng</button>
+            <button class="btn quick-add" data-field="addKnb" data-val="500">+500 KNB</button>
+            <button class="btn quick-add" data-field="addKnb" data-val="5000">+5,000 KNB</button>
+            <button class="btn quick-add" data-field="addAttrPts" data-val="100">+100 Tiềm Năng</button>
+            <button class="btn quick-add" data-field="addSkPts" data-val="20">+20 Kỹ Năng</button>
+            <button class="btn quick-add" data-field="addFd" data-val="500">+500 Phúc Duyên</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><span>🎁 Phát Vật Phẩm, Kỳ Trân Các & Trang Bị Hoàng Kim</span></h2>
+
+          <div class="field">
+            <label>1. Phát Trang Bị Hoàng Kim & Buff Thời Gian</label>
+            <div class="btn-group">
+              <button id="btnGiveHkmp" class="btn primary">👑 +1 Hoàng Kim Môn Phái</button>
+              <button id="btnGiveHkCommon" class="btn primary">💍 +1 Hoàng Kim Chung (An Bang/Định Quốc)</button>
+              <button class="btn give-buff" data-key="tt" data-val="0.5" data-mins="60">🌿 Tiên Thảo Lộ (+60p)</button>
+              <button class="btn give-buff" data-key="tt" data-val="0.5" data-mins="1440">🌿 Tiên Thảo Lộ (+24h)</button>
+              <button class="btn give-buff" data-key="luck" data-val="20" data-mins="60">🍶 Quế Hoa Tửu (+60p)</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>2. Phát Vật Phẩm Kỳ Trân Các & Bí Kíp</label>
+            <div class="input-row" style="margin-bottom:8px;">
+              <select id="selMiscKey">
+                <option value="bk90">📕 Bí Kíp 90 (bk90)</option>
+                <option value="dtbk">📘 Đại Thành Bí Kíp (dtbk)</option>
+                <option value="vlmt">📗 Võ Lâm Mật Tịch (+1 Kỹ năng)</option>
+                <option value="ttk">📙 Tẩy Tủy Kinh (+5 Tiềm năng)</option>
+                <option value="rngua">🐎 Rương Ngựa (rngua)</option>
+                <option value="ldp">🔄 Lệnh Bài Đổi Phái (ldp)</option>
+                <option value="dgt">⚧ Thẻ Đổi Giới Tính (dgt)</option>
+                <option value="ldt">📜 Lệnh Bài Dã Tẩu (ldt)</option>
+                <option value="lb">🗡 Lệnh Bài Sát Thủ (lb)</option>
+                <option value="wc">💎 Thủy Tinh Trắng (wc)</option>
+                <option value="mys">🪨 Thần Bí Khoáng Thạch (mys)</option>
+              </select>
+              <input type="number" id="numMiscCount" value="5" min="1" max="999" style="width:90px;">
+              <button id="btnAddMisc" class="btn primary">➕ Phát Vật Phẩm</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>3. Phát Huyền Tinh Khoáng Thạch (Cấp 1 – 10)</label>
+            <div class="input-row">
+              <select id="selHtLvl">
+                <option value="1">Huyền Tinh Cấp 1</option>
+                <option value="2">Huyền Tinh Cấp 2</option>
+                <option value="3">Huyền Tinh Cấp 3</option>
+                <option value="4">Huyền Tinh Cấp 4</option>
+                <option value="5">Huyền Tinh Cấp 5</option>
+                <option value="6">Huyền Tinh Cấp 6</option>
+                <option value="7">Huyền Tinh Cấp 7</option>
+                <option value="8" selected>Huyền Tinh Cấp 8</option>
+                <option value="9">Huyền Tinh Cấp 9</option>
+                <option value="10">Huyền Tinh Cấp 10</option>
+              </select>
+              <input type="number" id="numHtCount" value="10" min="1" max="999" style="width:90px;">
+              <button id="btnAddHt" class="btn primary">➕ Phát Huyền Tinh</button>
+            </div>
+            <div class="btn-group" style="margin-top:8px;">
+              <button id="btnAddAllHt" class="btn">💎 +10 Huyền Tinh mỗi cấp (Từ cấp 1 → 10)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SUPABASE MANAGEMENT -->
+    <div id="tab-supabase" class="tab-pane">
+      <div class="grid-2">
+        <div class="card">
+          <h2>
+            <span>💬 Kênh Chat Thế Giới & Thông Báo Hệ Thống</span>
+            <button id="btnRefreshChat" class="btn">🔄 Làm mới</button>
+          </h2>
+          <div class="field">
+            <label>Gửi Thông Báo Hệ Thống (System Broadcast)</label>
+            <div class="input-row">
+              <input type="text" id="txtBroadcast" placeholder="Nhập nội dung thông báo toàn máy chủ...">
+              <button id="btnSendBroadcast" class="btn primary">📢 Gửi</button>
+            </div>
+          </div>
+          <div style="max-height:320px;overflow-y:auto;">
+            <table>
+              <thead>
+                <tr><th>Nhân vật</th><th>Nội dung</th><th>Hành động</th></tr>
+              </thead>
+              <tbody id="tblChat">
+                <tr><td colspan="3" style="color:var(--muted);">Bấm "Làm mới" để tải tin nhắn...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>
+            <span>🏆 Bảng Xếp Hạng (`profiles`) & Tổ Đội (`parties`)</span>
+            <button id="btnRefreshProfiles" class="btn">🔄 Làm mới</button>
+          </h2>
+          <div style="max-height:380px;overflow-y:auto;">
+            <table>
+              <thead>
+                <tr><th>Tên</th><th>Phái</th><th>Cấp</th><th>Lực chiến</th><th>Hành động</th></tr>
+              </thead>
+              <tbody id="tblProfiles">
+                <tr><td colspan="5" style="color:var(--muted);">Bấm "Làm mới" để tải danh sách nhân vật...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast">Đã lưu cấu hình!</div>
+
+  <script src="config.js?v=581"></script>
+  <script src="js/lib/supabase.js"></script>
+  <script>
+  (function () {
+    "use strict";
+
+    // --- Toast helper ---
+    var toastTimer = null;
+    function showToast(msg) {
+      var el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2400);
+    }
+
+    // --- Tabs ---
+    var tabBtns = document.querySelectorAll(".tab-btn");
+    for (var i = 0; i < tabBtns.length; i++) {
+      tabBtns[i].onclick = function () {
+        for (var j = 0; j < tabBtns.length; j++) tabBtns[j].classList.remove("active");
+        this.classList.add("active");
+        var target = this.getAttribute("data-tab");
+        var panes = document.querySelectorAll(".tab-pane");
+        for (var k = 0; k < panes.length; k++) panes[k].classList.remove("active");
+        document.getElementById("tab-" + target).classList.add("active");
+        if (target === "supabase") {
+          loadSupabaseChat();
+          loadSupabaseProfiles();
+        }
+      };
+    }
+
+    // --- Exact Save Checksum Z6 from app.js ---
+    var rD = "jx-idle-v1:";
+    function Z6(A) {
+      var n = 3735928559, t = 1103547991;
+      var e = rD + A;
+      for (var a = 0; a < e.length; a++) {
+        var c = e.charCodeAt(a);
+        n = Math.imul(n ^ c, 2654435761);
+        t = Math.imul(t ^ c, 1597334677);
+      }
+      n = Math.imul(n ^ (n >>> 16), 2246822507) ^ Math.imul(t ^ (t >>> 13), 3266489909);
+      t = Math.imul(t ^ (t >>> 16), 2246822507) ^ Math.imul(n ^ (n >>> 13), 3266489909);
+      return (4294967296 * (2097151 & t) + (n >>> 0)).toString(36);
+    }
+    function encodeSave(state) {
+      var n = JSON.stringify(state);
+      return JSON.stringify({ d: n, h: Z6(n) });
+    }
+    function decodeSave(raw) {
+      if (!raw) return null;
+      try {
+        var n = JSON.parse(raw);
+        if (n && typeof n.d === "string" && typeof n.h === "string") {
+          return JSON.parse(n.d);
+        }
+        return n;
+      } catch (e) {
+        return null;
+      }
+    }
+    function slotKey(idx) {
+      idx = +idx || 0;
+      return idx === 0 ? "jxidle" : "jxidle_" + (idx + 1);
+    }
+
+    // --- BroadcastChannel to live game tab ---
+    var bc = null;
+    var liveConnected = false;
+    try {
+      bc = new BroadcastChannel("jx_admin_channel");
+      bc.onmessage = function (ev) {
+        var msg = ev.data;
+        if (msg && msg.type === "snapshot" && msg.data) {
+          liveConnected = true;
+          var badge = document.getElementById("connBadge");
+          badge.classList.remove("offline");
+          badge.textContent = "● Đã kết nối Trực Tiếp với Tab Game đang mở (" + (msg.data.player.name || "Tân thủ") + ")";
+          if (msg.note) showToast(msg.note);
+          populatePlayerForm(msg.data.player);
+        }
+      };
+      bc.postMessage({ type: "ping" });
+    } catch (e) {}
+
+    // --- Progression Time Calculator (Lv 1 -> Lv 20) ---
+    var EXP_TABLE_20 = [100,500,1100,1900,2900,4100,5500,7100,8900,10900,13100,15700,18700,22100,25900,30100,34700,39700,45100];
+    function baseMobExp(lvl) {
+      if (lvl <= 10) return 40 + 5 * lvl;
+      if (lvl <= 20) return 120 + 5 * (lvl - 10);
+      return 240 + 5 * (lvl - 20);
+    }
+    function updateCalculator() {
+      var expRate = Math.max(0.1, +document.getElementById("numExpRate").value || 1.5);
+      var novLvl = Math.max(0, +document.getElementById("numNoviceLvl").value || 30);
+      var novBonus = Math.max(0, +document.getElementById("numNoviceBonus").value || 2);
+      var spawnSpd = Math.max(0.5, +document.getElementById("numSpawnSpeed").value || 1);
+
+      document.getElementById("lblExpRate").textContent = expRate + "x";
+      document.getElementById("lblNoviceLvl").textContent = novLvl > 0 ? "Dưới cấp " + novLvl : "Tắt";
+      document.getElementById("lblNoviceBonus").textContent = "+" + Math.round(novBonus * 100) + "% (x" + (1 + novBonus) + " EXP)";
+      document.getElementById("lblGoldRate").textContent = (+document.getElementById("numGoldRate").value || 1) + "x";
+      document.getElementById("lblDropRate").textContent = (+document.getElementById("numDropRate").value || 1) + "x";
+      document.getElementById("lblSpawnSpeed").textContent = spawnSpd + "x";
+
+      var t10 = 0, t20 = 0;
+      for (var lv = 1; lv < 20; lv++) {
+        var need = EXP_TABLE_20[lv - 1];
+        var mobLv = Math.max(1, lv - 1);
+        var bxp = baseMobExp(mobLv) * 1.12;
+        var nov = (lv >= 10 && lv < novLvl) ? (1 + novBonus) : 1.0;
+        var xpKill = bxp * nov * expRate;
+        var kills = need / xpKill;
+        var secPerKill = (lv < 10 ? 2.5 : 2.2) / Math.pow(spawnSpd, 0.35);
+        var secs = kills * secPerKill;
+        if (lv < 10) t10 += secs;
+        t20 += secs;
+      }
+      var m10 = (t10 / 60) + 1.5;
+      var m20 = (t20 / 60) + 5.0;
+      var m20Ttl = (t20 / 60 / 1.5) + 4.0;
+
+      document.getElementById("estLv10").textContent = "~" + m10.toFixed(1) + " phút";
+      document.getElementById("estLv20").textContent = "~" + m20.toFixed(1) + " phút";
+      document.getElementById("estLv20Ttl").textContent = "~" + m20Ttl.toFixed(1) + " phút";
+
+      updateConfigPreview();
+    }
+
+    function getRatesFromForm() {
+      return {
+        expRate: Math.max(0.1, +document.getElementById("numExpRate").value || 1.5),
+        goldRate: Math.max(0.1, +document.getElementById("numGoldRate").value || 1),
+        dropRate: Math.max(0.1, +document.getElementById("numDropRate").value || 1),
+        noviceMaxLvl: Math.max(0, Math.floor(+document.getElementById("numNoviceLvl").value || 0)),
+        noviceExpBonus: Math.max(0, +document.getElementById("numNoviceBonus").value || 0),
+        spawnSpeed: Math.max(0.5, +document.getElementById("numSpawnSpeed").value || 1),
+        mobHpMult: Math.max(0.1, +document.getElementById("numMobHp").value || 1),
+        mobDmgMult: Math.max(0.1, +document.getElementById("numMobDmg").value || 1)
+      };
+    }
+
+    function loadRatesIntoForm() {
+      var cfg = {
+        expRate: window.EXP_RATE || 1.5,
+        goldRate: window.GOLD_RATE || 1,
+        dropRate: window.DROP_RATE || 1,
+        noviceMaxLvl: window.NOVICE_MAX_LVL != null ? window.NOVICE_MAX_LVL : 30,
+        noviceExpBonus: window.NOVICE_EXP_BONUS != null ? window.NOVICE_EXP_BONUS : 2,
+        spawnSpeed: window.SPAWN_SPEED || 1,
+        mobHpMult: window.MOB_HP_MULT || 1,
+        mobDmgMult: window.MOB_DMG_MULT || 1
+      };
+      try {
+        var raw = localStorage.getItem("jx_admin_cfg");
+        if (raw) Object.assign(cfg, JSON.parse(raw));
+      } catch (e) {}
+
+      document.getElementById("rngExpRate").value = Math.min(20, cfg.expRate);
+      document.getElementById("numExpRate").value = cfg.expRate;
+      document.getElementById("numGoldRate").value = cfg.goldRate;
+      document.getElementById("numDropRate").value = cfg.dropRate;
+      document.getElementById("numNoviceLvl").value = cfg.noviceMaxLvl;
+      document.getElementById("numNoviceBonus").value = cfg.noviceExpBonus;
+      document.getElementById("numSpawnSpeed").value = cfg.spawnSpeed;
+      document.getElementById("numMobHp").value = cfg.mobHpMult;
+      document.getElementById("numMobDmg").value = cfg.mobDmgMult;
+      updateCalculator();
+    }
+
+    function updateConfigPreview() {
+      var r = getRatesFromForm();
+      var code =
+        "window.PARTY_OFF = false;\n" +
+        "window.EXP_RATE = " + r.expRate + ";          // Hệ số EXP toàn máy chủ\n" +
+        "window.GOLD_RATE = " + r.goldRate + ";         // Hệ số Ngân lượng rơi\n" +
+        "window.DROP_RATE = " + r.dropRate + ";         // Hệ số Tỷ lệ rớt đồ & nguyên liệu\n" +
+        "window.NOVICE_MAX_LVL = " + r.noviceMaxLvl + ";     // Cấp giới hạn Hào Quang Tân Thủ\n" +
+        "window.NOVICE_EXP_BONUS = " + r.noviceExpBonus + ";  // Thưởng thêm EXP Tân Thủ\n" +
+        "window.SPAWN_SPEED = " + r.spawnSpeed + ";       // Tốc độ gọi đợt quái mới\n" +
+        "window.MOB_HP_MULT = " + r.mobHpMult + ";       // Hệ số Máu quái\n" +
+        "window.MOB_DMG_MULT = " + r.mobDmgMult + ";      // Hệ số Sát thương quái";
+      document.getElementById("configPreview").textContent = code;
+    }
+
+    // Bind rate inputs
+    document.getElementById("rngExpRate").oninput = function () {
+      document.getElementById("numExpRate").value = this.value;
+      updateCalculator();
+    };
+    ["numExpRate", "numGoldRate", "numDropRate", "numNoviceLvl", "numNoviceBonus", "numSpawnSpeed", "numMobHp", "numMobDmg"].forEach(function (id) {
+      document.getElementById(id).oninput = function () {
+        if (id === "numExpRate") document.getElementById("rngExpRate").value = Math.min(20, +this.value || 1.5);
+        updateCalculator();
+      };
+    });
+
+    function bindPresetBtns(selector, inputId) {
+      var btns = document.querySelectorAll(selector);
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].onclick = function () {
+          var v = this.getAttribute("data-val");
+          document.getElementById(inputId).value = v;
+          if (inputId === "numExpRate") document.getElementById("rngExpRate").value = Math.min(20, +v);
+          updateCalculator();
+        };
+      }
+    }
+    bindPresetBtns(".exp-preset", "numExpRate");
+    bindPresetBtns(".gold-preset", "numGoldRate");
+    bindPresetBtns(".drop-preset", "numDropRate");
+
+    document.getElementById("btnSaveRates").onclick = function () {
+      var r = getRatesFromForm();
+      localStorage.setItem("jx_admin_cfg", JSON.stringify(r));
+      if (bc) bc.postMessage({ type: "setRates", rates: r });
+      showToast("✅ Đã lưu & áp dụng tỷ lệ máy chủ (EXP ×" + r.expRate + ")!");
+    };
+
+    document.getElementById("btnResetRates").onclick = function () {
+      localStorage.removeItem("jx_admin_cfg");
+      document.getElementById("numExpRate").value = 1.5;
+      document.getElementById("rngExpRate").value = 1.5;
+      document.getElementById("numGoldRate").value = 1;
+      document.getElementById("numDropRate").value = 1;
+      document.getElementById("numNoviceLvl").value = 30;
+      document.getElementById("numNoviceBonus").value = 2;
+      document.getElementById("numSpawnSpeed").value = 1;
+      document.getElementById("numMobHp").value = 1;
+      document.getElementById("numMobDmg").value = 1;
+      updateCalculator();
+      var r = getRatesFromForm();
+      localStorage.setItem("jx_admin_cfg", JSON.stringify(r));
+      if (bc) bc.postMessage({ type: "setRates", rates: r });
+      showToast("🔄 Đã khôi phục cấu hình chuẩn (EXP ×1.5)!");
+    };
+
+    document.getElementById("btnCopyConfig").onclick = function () {
+      var text = document.getElementById("configPreview").textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        showToast("📋 Đã copy cấu hình config.js vào Clipboard!");
+      });
+    };
+
+    // --- Character Editor (Live + LocalStorage fallback) ---
+    function loadCharFromLocalSlot() {
+      var slot = +document.getElementById("selSlot").value || 0;
+      var raw = localStorage.getItem(slotKey(slot));
+      var st = decodeSave(raw);
+      if (!st) {
+        showToast("Ô nhân vật này chưa có dữ liệu!");
+        return;
+      }
+      populatePlayerForm({
+        name: st.name || "Tân thủ",
+        lvl: st.lvl || 1,
+        gold: st.gold || 0,
+        knb: st.knb || 0,
+        attrPts: st.attrPts || 0,
+        skPts: st.skPts || 0,
+        maxStage: st.maxStage || 1,
+        reborn: (st.rw && st.rw.stat && st.rw.stat.reborn) || 0
+      });
+    }
+
+    function populatePlayerForm(p) {
+      if (!p) return;
+      document.getElementById("chName").value = p.name || "Tân thủ";
+      document.getElementById("chLvl").value = p.lvl || 1;
+      document.getElementById("chReborn").value = p.reborn || 0;
+      document.getElementById("chMaxStage").value = p.maxStage || 1;
+      document.getElementById("chAttrPts").value = p.attrPts || 0;
+      document.getElementById("chSkPts").value = p.skPts || 0;
+      document.getElementById("chGold").value = p.gold || 0;
+      document.getElementById("chKnb").value = p.knb || 0;
+    }
+
+    function modifyLocalSlot(mutator) {
+      var slot = +document.getElementById("selSlot").value || 0;
+      var key = slotKey(slot);
+      var st = decodeSave(localStorage.getItem(key));
+      if (!st) {
+        showToast("Không tìm thấy dữ liệu nhân vật ở ô này!");
+        return false;
+      }
+      mutator(st);
+      st.last = Date.now();
+      localStorage.setItem(key, encodeSave(st));
+      loadCharFromLocalSlot();
+      return true;
+    }
+
+    document.getElementById("selSlot").onchange = loadCharFromLocalSlot;
+    document.getElementById("btnReloadChar").onclick = function () {
+      if (bc && liveConnected) bc.postMessage({ type: "ping" });
+      else loadCharFromLocalSlot();
+      showToast("🔄 Đã tải lại thông tin nhân vật!");
+    };
+
+    document.getElementById("btnSaveChar").onclick = function () {
+      var patch = {
+        name: document.getElementById("chName").value.trim() || "Tân thủ",
+        lvl: Math.max(1, Math.min(200, +document.getElementById("chLvl").value || 1)),
+        reborn: Math.max(0, Math.min(10, +document.getElementById("chReborn").value || 0)),
+        maxStage: Math.max(1, +document.getElementById("chMaxStage").value || 1),
+        attrPts: Math.max(0, +document.getElementById("chAttrPts").value || 0),
+        skPts: Math.max(0, +document.getElementById("chSkPts").value || 0),
+        gold: Math.max(0, +document.getElementById("chGold").value || 0),
+        knb: Math.max(0, +document.getElementById("chKnb").value || 0),
+        heal: true
+      };
+      if (liveConnected && bc) {
+        bc.postMessage({ type: "setPlayer", patch: patch });
+      } else {
+        modifyLocalSlot(function (st) {
+          st.name = patch.name;
+          st.lvl = patch.lvl;
+          st.maxStage = patch.maxStage;
+          st.attrPts = patch.attrPts;
+          st.skPts = patch.skPts;
+          st.gold = patch.gold;
+          st.knb = patch.knb;
+          st.rw = st.rw || {};
+          st.rw.stat = st.rw.stat || {};
+          st.rw.stat.reborn = patch.reborn;
+        });
+        showToast("💾 Đã lưu chỉ số nhân vật vào LocalStorage!");
+      }
+    };
+
+    var quickBtns = document.querySelectorAll(".quick-add");
+    for (var q = 0; q < quickBtns.length; q++) {
+      quickBtns[q].onclick = function () {
+        var f = this.getAttribute("data-field");
+        var v = +this.getAttribute("data-val") || 0;
+        var patch = {};
+        patch[f] = v;
+        if (liveConnected && bc) {
+          bc.postMessage({ type: "setPlayer", patch: patch });
+        } else {
+          modifyLocalSlot(function (st) {
+            if (f === "addGold") st.gold = (st.gold || 0) + v;
+            if (f === "addKnb") st.knb = (st.knb || 0) + v;
+            if (f === "addAttrPts") st.attrPts = (st.attrPts || 0) + v;
+            if (f === "addSkPts") st.skPts = (st.skPts || 0) + v;
+            if (f === "addFd") {
+              st.rw = st.rw || {};
+              st.rw.fd = (st.rw.fd || 0) + v;
+            }
+          });
+          showToast("✅ Đã cộng thêm vào nhân vật!");
+        }
+      };
+    }
+
+    document.getElementById("btnAddMisc").onclick = function () {
+      var key = document.getElementById("selMiscKey").value;
+      var count = Math.max(1, +document.getElementById("numMiscCount").value || 1);
+      if (liveConnected && bc) {
+        bc.postMessage({ type: "addMat", cat: "misc", key: key, count: count });
+      } else {
+        modifyLocalSlot(function (st) {
+          st.mats = st.mats || { ht: {}, ore: {}, shard: {}, misc: {} };
+          st.mats.misc = st.mats.misc || {};
+          st.mats.misc[key] = (st.mats.misc[key] || 0) + count;
+        });
+        showToast("🎁 Đã thêm " + count + " × " + key + " vào hành trang!");
+      }
+    };
+
+    document.getElementById("btnAddHt").onclick = function () {
+      var lvl = document.getElementById("selHtLvl").value;
+      var count = Math.max(1, +document.getElementById("numHtCount").value || 1);
+      if (liveConnected && bc) {
+        bc.postMessage({ type: "addMat", cat: "ht", key: lvl, count: count });
+      } else {
+        modifyLocalSlot(function (st) {
+          st.mats = st.mats || { ht: {}, ore: {}, shard: {}, misc: {} };
+          st.mats.ht = st.mats.ht || {};
+          st.mats.ht[lvl] = (st.mats.ht[lvl] || 0) + count;
+        });
+        showToast("💎 Đã thêm " + count + " Huyền Tinh cấp " + lvl + "!");
+      }
+    };
+
+    document.getElementById("btnAddAllHt").onclick = function () {
+      if (liveConnected && bc) {
+        for (var lv = 1; lv <= 10; lv++) {
+          bc.postMessage({ type: "addMat", cat: "ht", key: lv, count: 10 });
+        }
+      } else {
+        modifyLocalSlot(function (st) {
+          st.mats = st.mats || { ht: {}, ore: {}, shard: {}, misc: {} };
+          st.mats.ht = st.mats.ht || {};
+          for (var lv = 1; lv <= 10; lv++) {
+            st.mats.ht[lv] = (st.mats.ht[lv] || 0) + 10;
+          }
+        });
+        showToast("💎 Đã tặng +10 Huyền Tinh mỗi cấp (1 → 10)!");
+      }
+    };
+
+    var buffBtns = document.querySelectorAll(".give-buff");
+    for (var b = 0; b < buffBtns.length; b++) {
+      buffBtns[b].onclick = function () {
+        var key = this.getAttribute("data-key");
+        var val = +this.getAttribute("data-val");
+        var mins = +this.getAttribute("data-mins");
+        if (liveConnected && bc) {
+          bc.postMessage({ type: "addBuff", key: key, val: val, mins: mins });
+        } else {
+          modifyLocalSlot(function (st) {
+            st.buf = st.buf || {};
+            var now = Date.now();
+            var cur = st.buf[key];
+            var until = (cur && cur.until > now ? cur.until : now) + mins * 60000;
+            st.buf[key] = { p: val, until: until };
+          });
+          showToast("🌿 Đã kích hoạt Buff +" + mins + " phút!");
+        }
+      };
+    }
+
+    document.getElementById("btnGiveHkmp").onclick = function () {
+      if (liveConnected && bc) {
+        bc.postMessage({ type: "grantGoldItem", facOnly: true });
+      } else {
+        showToast("⚠ Hãy mở tab Game (index.html) song song để tạo trang bị Hoàng Kim theo phái!");
+      }
+    };
+
+    document.getElementById("btnGiveHkCommon").onclick = function () {
+      if (liveConnected && bc) {
+        bc.postMessage({ type: "grantGoldItem", facOnly: false });
+      } else {
+        showToast("⚠ Hãy mở tab Game (index.html) song song để tạo trang bị Hoàng Kim!");
+      }
+    };
+
+    // --- Supabase Management ---
+    var sbClient = null;
+    if (window.supabase && window.CHAT_CFG && window.CHAT_CFG.url && window.CHAT_CFG.key) {
+      try {
+        sbClient = window.supabase.createClient(window.CHAT_CFG.url, window.CHAT_CFG.key);
+      } catch (e) {}
+    }
+
+    async function loadSupabaseChat() {
+      var tbody = document.getElementById("tblChat");
+      if (!sbClient) {
+        tbody.innerHTML = '<tr><td colspan="3">Chưa cấu hình Supabase trong config.js</td></tr>';
+        return;
+      }
+      var res = await sbClient.from("chat").select("*").order("id", { ascending: false }).limit(25);
+      if (res.error) {
+        tbody.innerHTML = '<tr><td colspan="3" style="color:#ff8080;">Lỗi: ' + res.error.message + "</td></tr>";
+        return;
+      }
+      var rows = res.data || [];
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="3" style="color:var(--muted);">Chưa có tin nhắn nào.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(function (r) {
+        return (
+          "<tr>" +
+          '<td><b style="color:var(--gold);">' + (r.name || "Ẩn danh") + "</b> <small>(Cấp " + (r.lvl || 1) + ")</small></td>" +
+          "<td>" + (r.msg || "").replace(/</g, "&lt;") + "</td>" +
+          '<td><button class="btn danger del-chat" data-id="' + r.id + '">Xóa</button></td>' +
+          "</tr>"
+        );
+      }).join("");
+
+      var delBtns = tbody.querySelectorAll(".del-chat");
+      for (var i = 0; i < delBtns.length; i++) {
+        delBtns[i].onclick = async function () {
+          var id = +this.getAttribute("data-id");
+          await sbClient.from("chat").delete().eq("id", id);
+          showToast("🗑 Đã xóa tin nhắn #" + id);
+          loadSupabaseChat();
+        };
+      }
+    }
+
+    async function loadSupabaseProfiles() {
+      var tbody = document.getElementById("tblProfiles");
+      if (!sbClient) return;
+      var res = await sbClient.from("profiles").select("*").order("power", { ascending: false }).limit(30);
+      if (res.error) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:#ff8080;">Lỗi: ' + res.error.message + "</td></tr>";
+        return;
+      }
+      var rows = res.data || [];
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted);">Chưa có nhân vật nào trên BXH.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(function (r) {
+        return (
+          "<tr>" +
+          '<td><b style="color:var(--gold);">' + (r.name || "?") + "</b></td>" +
+          "<td>" + (r.fac || "-") + "</td>" +
+          "<td>" + (r.lvl || 1) + (r.reborn ? " (TS " + r.reborn + ")" : "") + "</td>" +
+          "<td>" + Number(r.power || 0).toLocaleString("vi-VN") + "</td>" +
+          '<td><button class="btn danger del-prof" data-uid="' + r.uid + '">Xóa</button></td>' +
+          "</tr>"
+        );
+      }).join("");
+
+      var delBtns = tbody.querySelectorAll(".del-prof");
+      for (var i = 0; i < delBtns.length; i++) {
+        delBtns[i].onclick = async function () {
+          var uid = this.getAttribute("data-uid");
+          await sbClient.from("profiles").delete().eq("uid", uid);
+          showToast("🗑 Đã xóa hồ sơ khỏi BXH");
+          loadSupabaseProfiles();
+        };
+      }
+    }
+
+    document.getElementById("btnRefreshChat").onclick = loadSupabaseChat;
+    document.getElementById("btnRefreshProfiles").onclick = loadSupabaseProfiles;
+    document.getElementById("btnSendBroadcast").onclick = async function () {
+      var txt = document.getElementById("txtBroadcast").value.trim();
+      if (!txt || !sbClient) return;
+      await sbClient.from("chat").insert({
+        uid: "system_admin",
+        name: "📢 THÔNG BÁO",
+        fac: "wudang",
+        lvl: 200,
+        reborn: 10,
+        msg: txt
+      });
+      document.getElementById("txtBroadcast").value = "";
+      showToast("📢 Đã phát thông báo toàn máy chủ!");
+      loadSupabaseChat();
+    };
+
+    // Init on page load
+    loadRatesIntoForm();
+    loadCharFromLocalSlot();
+  })();
+  </script>
+</body>
+</html>
