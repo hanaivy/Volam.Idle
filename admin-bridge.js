@@ -53,6 +53,11 @@
       return;
     }
     if (msg.type === "setRates" && msg.rates) {
+      if (typeof msg.rates.soloMode === "boolean") {
+        window.SOLO_MODE = msg.rates.soloMode;
+        document.documentElement.classList.toggle("solomode", msg.rates.soloMode);
+        document.documentElement.classList.toggle("ptclosed", msg.rates.soloMode);
+      }
       window.JXAdmin.setRates(msg.rates);
       try {
         localStorage.setItem("jx_admin_cfg", JSON.stringify(msg.rates));

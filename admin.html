@@ -423,6 +423,13 @@
             </div>
           </div>
 
+          <div class="field" style="background:#121916;border:1px solid #2b3d35;padding:10px 12px;border-radius:6px;margin-top:6px;">
+            <label style="margin:0;cursor:pointer;justify-content:flex-start;gap:10px;align-items:center;">
+              <input type="checkbox" id="chkSoloMode" checked style="width:16px;height:16px;accent-color:var(--gold);">
+              <span>🛡 <b>Chế độ Chơi Đơn (Solo Mode)</b> — Ẩn Chợ, Chat, Xếp Hạng, Tổ Đội, Hộp Thư</span>
+            </label>
+          </div>
+
           <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
             <button id="btnSaveRates" class="btn primary" style="flex:1;justify-content:center;padding:11px;font-size:14px;">
               💾 LƯU & ÁP DỤNG NGAY VÀO GAME
@@ -757,6 +764,8 @@
 
     function getRatesFromForm() {
       return {
+        soloMode: !!document.getElementById("chkSoloMode").checked,
+        partyOff: !!document.getElementById("chkSoloMode").checked,
         expRate: Math.max(0.1, +document.getElementById("numExpRate").value || 1.5),
         goldRate: Math.max(0.1, +document.getElementById("numGoldRate").value || 1),
         dropRate: Math.max(0.1, +document.getElementById("numDropRate").value || 1),
@@ -770,6 +779,7 @@
 
     function loadRatesIntoForm() {
       var cfg = {
+        soloMode: window.SOLO_MODE !== false,
         expRate: window.EXP_RATE || 1.5,
         goldRate: window.GOLD_RATE || 1,
         dropRate: window.DROP_RATE || 1,
@@ -784,6 +794,7 @@
         if (raw) Object.assign(cfg, JSON.parse(raw));
       } catch (e) {}
 
+      document.getElementById("chkSoloMode").checked = cfg.soloMode !== false;
       document.getElementById("rngExpRate").value = Math.min(20, cfg.expRate);
       document.getElementById("numExpRate").value = cfg.expRate;
       document.getElementById("numGoldRate").value = cfg.goldRate;
@@ -798,8 +809,11 @@
 
     function updateConfigPreview() {
       var r = getRatesFromForm();
+      var sbBtn = document.querySelector('.tab-btn[data-tab="supabase"]');
+      if (sbBtn) sbBtn.style.display = r.soloMode ? "none" : "";
       var code =
-        "window.PARTY_OFF = false;\n" +
+        "window.SOLO_MODE = " + r.soloMode + ";        // Ẩn Chợ, Chat, Xếp hạng, Tổ đội\n" +
+        "window.PARTY_OFF = " + r.partyOff + ";\n" +
         "window.EXP_RATE = " + r.expRate + ";          // Hệ số EXP toàn máy chủ\n" +
         "window.GOLD_RATE = " + r.goldRate + ";         // Hệ số Ngân lượng rơi\n" +
         "window.DROP_RATE = " + r.dropRate + ";         // Hệ số Tỷ lệ rớt đồ & nguyên liệu\n" +
@@ -812,6 +826,7 @@
     }
 
     // Bind rate inputs
+    document.getElementById("chkSoloMode").onchange = updateCalculator;
     document.getElementById("rngExpRate").oninput = function () {
       document.getElementById("numExpRate").value = this.value;
       updateCalculator();
@@ -1171,3 +1186,4 @@
   </script>
 </body>
 </html>
+
