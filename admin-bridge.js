@@ -1077,6 +1077,9 @@
     // 2. Desktop UI (#u20r right button column)
     var u20r = document.getElementById("u20r");
     if (u20r && !document.getElementById("u20bossHunt")) {
+      u20r.style.flexWrap = "wrap";
+      u20r.style.justifyContent = "flex-end";
+      u20r.style.maxWidth = "152px";
       var bCloud = document.createElement("button");
       bCloud.className = "u20rb";
       bCloud.id = "u20cloudSave";
