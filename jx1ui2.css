@@ -134,7 +134,7 @@ body.nochat #modeSw{left:6px}
 #pad .sk.nowp i{filter:grayscale(1) brightness(.55)}
 
 #ktcBtn{position:static;flex:none;margin:0 6px 0 0;padding:3px 9px;font-size:12px;white-space:nowrap;width:auto;height:auto;border-radius:3px;background:linear-gradient(#3a3020,#201a10);border:1px solid #8a6d35;color:#ffd98a;cursor:pointer}
-.gold .knbi{width:16px;height:16px;margin-left:8px;image-rendering:pixelated}
+.gold .knbi{width:16px;height:16px;margin-left:8px;image-rendering:auto}
 #knbTop{color:#ffd24a}
 @media (max-width:520px){#ktcBtn{font-size:11px;padding:2px 5px}}
 #chatAtt:empty{display:none}#chatAtt{display:flex;align-items:center;gap:2px;max-width:45%;white-space:nowrap;overflow:hidden;font-size:11px;pointer-events:auto}

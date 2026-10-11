@@ -12,7 +12,7 @@ button[disabled]{opacity:.4;cursor:default}
 #app{position:relative;height:100dvh;width:min(100vw,calc(100dvh*9/16));margin:0 auto;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px #000}
 
 #top{display:flex;align-items:center;gap:8px;padding:calc(6px + var(--safe-t)) 10px 6px;background:linear-gradient(#1a2521,#0f1613);border-bottom:1px solid var(--gold2);z-index:3}
-.lvbox{position:relative;width:46px;height:46px;border-radius:8px;border:2px solid var(--gold2);background:var(--pl, none) center 12%/auto 135% no-repeat,radial-gradient(#2c3a2f,#0c120f);image-rendering:pixelated;flex:none;overflow:visible}
+.lvbox{position:relative;width:46px;height:46px;border-radius:8px;border:2px solid var(--gold2);background:var(--pl, none) center 12%/auto 135% no-repeat,radial-gradient(#2c3a2f,#0c120f);image-rendering:auto;flex:none;overflow:visible}
 .lvbox #lv{position:absolute;right:-6px;bottom:-6px;min-width:22px;height:22px;padding:0 4px;border-radius:11px;border:2px solid var(--gold2);background:#0c120f;display:grid;place-items:center;font-weight:700;color:var(--gold);font-size:12px}
 .topmid{flex:1;min-width:0}
 .topmid .row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
@@ -257,7 +257,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 .ep-htc img{width:36px}.ep-htc i{position:absolute;right:2px;bottom:0;font:10px var(--font);color:var(--dim)}.ep-htc b{position:absolute;left:2px;top:0;font:10px var(--font);color:#fff}
 .ep-row{display:flex;gap:8px;align-items:center;margin:4px 0}.ep-stones{display:flex;flex-wrap:wrap;gap:4px}
 button.ep-htc{cursor:pointer}.ep-htc.ep-on{outline:2px solid #e6c67a;box-shadow:0 0 8px #e6c67a88}
-.it.ep-st img,.ep-htc img,.ep-slot img{image-rendering:pixelated;width:auto;height:30px;max-width:none}
+.it.ep-st img,.ep-htc img,.ep-slot img{image-rendering:auto;width:auto;height:30px;max-width:none}
 .ep-slot img{height:22px}
 #mBody .card>label{display:block;margin-top:4px}
 .tag.buff{background:#3a3010;color:#ffe48a}.tag.aura{background:#103a30;color:#8ff0d0}.tag.curse{background:#2a1438;color:#d38bff}
@@ -268,7 +268,7 @@ button.ep-htc{cursor:pointer}.ep-htc.ep-on{outline:2px solid #e6c67a;box-shadow:
 /* bieu tuong trang thai kieu JX1 */
 #skBuffs{gap:2px;top:56px;left:6px;max-width:70%}
 #skBuffs .sti{width:26px;text-align:center}
-#skBuffs .sti img{width:22px;height:22px;display:block;margin:0 auto;border:1px solid #000;background:#0008;image-rendering:pixelated;object-fit:contain}
+#skBuffs .sti img{width:22px;height:22px;display:block;margin:0 auto;border:1px solid #000;background:#0008;image-rendering:auto;object-fit:contain}
 #skBuffs .sti b{display:block;font:700 9px/10px var(--font);color:#5dff5d;text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000}
 .btn.knb{color:#ffd700!important}
 #giftTabs .gdot{display:inline-block;min-width:15px;padding:0 3px;margin-left:2px;border-radius:8px;background:#c0392b;color:#fff;font-size:9px;line-height:14px;text-align:center}
@@ -307,7 +307,7 @@ button.ep-htc{cursor:pointer}.ep-htc.ep-on{outline:2px solid #e6c67a;box-shadow:
 .lootadv>summary{cursor:pointer;font-weight:600;padding:3px 0;color:#e0c060}
 @media (max-width:520px){.lmodes{grid-template-columns:1fr}}
 /* v416: Bo Thien Thach (thang cap Bach Kim) */
-.bttrow{display:flex;flex-direction:column;gap:3px;margin:6px 0}.bttrow label{display:flex;align-items:center;gap:6px}.bttrow img{width:18px;height:20px;image-rendering:pixelated}.bttrow input{margin-left:auto}
+.bttrow{display:flex;flex-direction:column;gap:3px;margin:6px 0}.bttrow label{display:flex;align-items:center;gap:6px}.bttrow img{width:18px;height:20px;image-rendering:auto}.bttrow input{margin-left:auto}
 /* v428: 1 che do nhat do */
 .lmodes.one{grid-template-columns:1fr}.lmodes.one .lmode{cursor:default}
 .lmodes.one .lmode{cursor:pointer}.lmck{display:flex;align-items:center;gap:6px}.lmck input{width:16px;height:16px;margin:0;accent-color:#d8b44a}
@@ -315,7 +315,7 @@ button.ep-htc{cursor:pointer}.ep-htc.ep-on{outline:2px solid #e6c67a;box-shadow:
 /* v430: xem truoc ban, ep Tim thu gon */
 .spv{max-height:52vh;overflow:auto;display:flex;flex-direction:column;gap:2px;margin:6px 0}
 .spr{display:flex;align-items:center;gap:8px;padding:3px 6px;border:1px solid var(--line);background:rgba(0,0,0,.25);cursor:pointer;font-size:12px}
-.spr .it{width:28px;height:28px;flex:none;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--c);background:#000}.spr .it img{max-width:26px;max-height:26px;image-rendering:pixelated}
+.spr .it{width:28px;height:28px;flex:none;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--c);background:#000}.spr .it img{max-width:26px;max-height:26px;image-rendering:auto}
 .spr .spn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .eploot>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.eploot>summary::-webkit-details-marker{display:none}
 .eploot>summary::before{content:'▸';color:#d8b44a}.eploot[open]>summary::before{content:'▾'}

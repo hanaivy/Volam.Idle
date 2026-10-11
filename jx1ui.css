@@ -30,7 +30,7 @@ h3{color:var(--gold);border-bottom:1px solid #3a3a33;padding-bottom:3px}
 /* thanh nut duoi: bieu tuong goc JX1 */
 #tabs{background:linear-gradient(#2a2822,#0f0e0c)!important;border-top:2px solid #4a463a}
 #tabs button{color:#b9b29a;padding:28px 2px 5px}
-#tabs button::before{width:26px;height:26px;margin-left:-13px;top:2px;background-size:auto 100%!important;image-rendering:pixelated}
+#tabs button::before{width:26px;height:26px;margin-left:-13px;top:2px;background-size:auto 100%!important;image-rendering:auto}
 #tabs button.on{color:#ffe9a8;box-shadow:none;background:radial-gradient(ellipse at 50% 30%,#4a3d1c88,transparent 70%)}
 #tabs button[data-t=log]::before{background-image:url(ui/jx1/nav_log.png)} #tabs button[data-t=char]::before{background-image:url(ui/jx1/nav_char.png)}
 #tabs button[data-t=skill]::before{background-image:url(ui/jx1/nav_skill.png)} #tabs button[data-t=inv]::before{background-image:url(ui/jx1/nav_inv.png)}
@@ -46,6 +46,6 @@ h3{color:var(--gold);border-bottom:1px solid #3a3a33;padding-bottom:3px}
 #t-forge::before{content:"LÒ RÈN"} #t-quest::before{content:"NHIỆM VỤ"}
 .fcard{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:start}
 .fcard .fic{width:44px;height:44px;display:grid;place-items:center;background:#0a0a0a;border:1px solid #2e2e2a}
-.fcard .fic img{height:30px;image-rendering:pixelated}
+.fcard .fic img{height:30px;image-rendering:auto}
 .it .fenh{left:auto;right:2px;top:0;color:#ffe9a8}
 .modec .modesw{display:flex;gap:6px;margin-bottom:6px}.modec .modesw .btn{flex:1}
